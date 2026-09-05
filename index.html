@@ -1,1832 +1,4004 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
-<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1220">
 <title>MachineMate</title>
-
+<link rel="manifest" href="manifest.json">
 <style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#172033;--muted:#697386;--line:#dfe4ea;--blue:#2563eb;--green:#16834b;--orange:#d97706;--red:#c62828;--purple:#6d28d9;--nav:#0b1220;--shadow:0 4px 18px #00000012}
 *{box-sizing:border-box}
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-background:#090909;
-color:#f5f5f5;
-padding-bottom:80px
-}
-header{
-background:#111;
-border-bottom:2px solid #ff7900;
-padding:17px 16px;
-position:sticky;
-top:0;
-z-index:20
-}
-header h1{margin:0;font-size:23px}
-header p{margin:4px 0 0;color:#999;font-size:13px}
-main{max-width:900px;margin:auto;padding:16px}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding-bottom:78px}
+button,input,select,textarea{font:inherit}
+button{border:0;border-radius:12px;padding:11px 14px;background:var(--blue);color:#fff;font-weight:700}
+button.secondary{background:#e9edf3;color:var(--text)}
+button.danger{background:var(--red)}
+button.success{background:var(--green)}
+button.warn{background:var(--orange)}
+button.small{padding:8px 10px;font-size:13px}
+.top{background:var(--nav);color:#fff;padding:18px 16px 14px;position:sticky;top:0;z-index:20}
+.top h1{margin:0;font-size:23px}
+.top p{margin:4px 0 0;color:#b9c3d4;font-size:13px}
+.wrap{max-width:900px;margin:auto;padding:14px}
 .view{display:none}
 .view.active{display:block}
-
-.card{
-background:#171717;
-border:1px solid #303030;
-border-radius:12px;
-padding:16px;
-margin-bottom:14px
-}
-.card h2,.card h3{margin-top:0}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-bottom:15px
-}
-.stat{
-background:#171717;
-border:1px solid #333;
-border-left:4px solid #ff7900;
-border-radius:10px;
-padding:14px
-}
-.stat strong{
-display:block;
-font-size:27px;
-color:#ff8a18
-}
-.stat span{font-size:12px;color:#999}
-
-button,.btn{
-background:#ff7900;
-color:#111;
-border:0;
-border-radius:8px;
-padding:12px 15px;
-font-size:15px;
-font-weight:700;
-margin:4px 3px 4px 0
-}
-button.secondary{background:#292929;color:#fff}
-button.danger{background:#a92828;color:#fff}
-button.smallbtn{padding:8px 10px;font-size:13px}
-
-input,select,textarea{
-width:100%;
-background:#0e0e0e;
-color:#fff;
-border:1px solid #444;
-border-radius:8px;
-padding:12px;
-font-size:15px;
-margin:5px 0 12px
-}
-textarea{min-height:90px}
-label{
-display:block;
-color:#aaa;
-font-size:13px
-}
-
-.item{
-background:#121212;
-border:1px solid #333;
-border-radius:10px;
-padding:13px;
-margin-bottom:10px
-}
-.item h3{margin:0 0 6px}
-.item p{color:#bbb;font-size:14px;margin:5px 0}
-
-.badge{
-display:inline-block;
-background:#333;
-border-radius:20px;
-padding:4px 8px;
-font-size:11px;
-margin:2px
-}
-.badge.orange{background:#ff7900;color:#111}
-.badge.red{background:#932929}
-.badge.green{background:#276b3d}
-
-.empty{
-text-align:center;
-color:#777;
-padding:25px
-}
-.small{font-size:12px;color:#888}
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:72px;
-background:#111;
-border-top:1px solid #333;
-display:grid;
-grid-template-columns:repeat(5,1fr);
-z-index:50
-}
-.bottom-nav button{
-background:transparent;
-color:#888;
-border-radius:0;
-margin:0;
-padding:5px;
-font-size:11px
-}
-.bottom-nav button.active{
-color:#ff7900;
-border-top:2px solid #ff7900
-}
-.bottom-nav span{
-display:block;
-font-size:20px
-}
-
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.82);
-z-index:100;
-overflow:auto;
-padding:18px
-}
-.modal.show{display:block}
-.modalbox{
-max-width:720px;
-margin:15px auto;
-background:#171717;
-border:1px solid #444;
-border-top:3px solid #ff7900;
-border-radius:12px;
-padding:18px
-}
-
-.guide{
-background:#101010;
-border:1px solid #333;
-border-radius:9px;
-padding:12px;
-margin:8px 0
-}
-.guide h4{margin:0 0 7px;color:#ff8a18}
-.guide p{color:#ccc;font-size:14px;line-height:1.5}
-
-.warning{
-background:#3b2b00;
-border:1px solid #ffb000;
-color:#ffd66b;
-padding:14px;
-border-radius:10px;
-line-height:1.45;
-margin-top:14px
-}
-
-#printReport{display:none}
-
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.stat{padding:14px;border-radius:14px;background:#fff;border:1px solid var(--line)}
+.stat b{display:block;font-size:25px}
+.muted{color:var(--muted);font-size:13px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.row.wraprow{flex-wrap:wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#edf1f6;font-size:12px;font-weight:700}
+.badge.green{background:#dcf7e8;color:#12643c}
+.badge.red{background:#fde3e3;color:#9d1c1c}
+.badge.orange{background:#fff0d6;color:#9a5b00}
+.badge.blue{background:#e0eaff;color:#1e4fb4}
+.badge.purple{background:#eee5ff;color:#5a20bd}
+.list{display:grid;gap:10px}
+.item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px}
+.item h3{margin:0 0 5px;font-size:16px}
+.item p{margin:4px 0}
+.empty{text-align:center;color:var(--muted);padding:28px 10px}
+.search{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:10px}
+.field{margin:10px 0}
+.field label{display:block;font-size:12px;font-weight:800;color:#4b5563;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text)}
+textarea{min-height:82px;resize:vertical}
+.check{display:flex;gap:9px;align-items:flex-start;padding:8px 0;font-size:14px}
+.check input{margin-top:3px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--nav);display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding-bottom:env(safe-area-inset-bottom)}
+.nav button{border-radius:0;background:transparent;color:#b9c3d4;padding:10px 3px;font-size:11px}
+.nav button.active{color:#fff;background:#17233b}
+.nav span{display:block;font-size:20px;margin-bottom:2px}
+.fab{position:fixed;right:16px;bottom:92px;border-radius:50%;width:54px;height:54px;font-size:25px;z-index:30;box-shadow:0 6px 18px #0003}
+.hero{background:linear-gradient(135deg,#0b1220,#1d4ed8);color:#fff;border-radius:18px;padding:18px;margin-bottom:12px}
+.hero h2{margin:0 0 5px}
+.hero p{color:#dbe5ff;margin:0}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:100}
+.modal.show{display:flex}
+.sheet{background:var(--bg);width:100%;max-height:94vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px}
+.sheet h2{margin:0 0 12px}
+.close{float:right;background:#e8ecf2;color:#222;border-radius:50%;width:38px;height:38px;padding:0}
+.photo{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-top:8px}
+.progress{height:8px;background:#e7ebf0;border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--blue)}
+.calc-result{font-size:22px;font-weight:800;padding:13px;background:#eef4ff;border-radius:12px;margin-top:10px}
+.dangerbox{padding:12px;border-radius:12px;background:#fff0f0;border:1px solid #f1b6b6}
+.okbox{padding:12px;border-radius:12px;background:#effbf4;border:1px solid #b9e6ca}
+.tablewrap{overflow:auto}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.timeline{border-left:3px solid #d8e0eb;padding-left:13px}
+.timeline .event{position:relative;margin-bottom:14px}
+.timeline .event:before{content:"";position:absolute;left:-20px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--blue)}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{min-height:58px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px;font-size:11px}
+.day strong{display:block}
+.day.has{background:#eef4ff;border-color:#a9c3ff}
+.hidden{display:none!important}
 @media(min-width:700px){
-.stats{grid-template-columns:repeat(4,1fr)}
-}
-
-@media print{
-body{
-background:white!important;
-color:#111!important;
-padding:0!important
-}
-body>*:not(#printReport){
-display:none!important
-}
-#printReport{
-display:block!important;
-background:white!important;
-color:#111!important;
-padding:25px!important
-}
-#printReport h1{
-font-size:25px;
-border-bottom:3px solid #ff7900;
-padding-bottom:10px
-}
-#printReport h2{
-font-size:18px;
-border-bottom:1px solid #aaa;
-padding-bottom:5px;
-margin-top:25px
-}
-#printReport p{
-font-size:12px
-}
-#printReport table{
-width:100%;
-border-collapse:collapse;
-margin-top:8px
-}
-#printReport th,#printReport td{
-border:1px solid #888;
-padding:7px;
-font-size:10px;
-text-align:left;
-vertical-align:top
-}
-#printReport th{background:#eee}
-.report-section{
-page-break-inside:avoid;
-margin-bottom:20px
-}
-.report-warning{
-border:1px solid #888;
-padding:10px;
-font-size:10px;
-margin-top:20px
-}
+.modal{align-items:center}
+.sheet{max-width:760px;border-radius:22px;max-height:90vh}
+.grid{grid-template-columns:repeat(4,1fr)}
+body{padding-bottom:80px}
 }
 </style>
 </head>
 
 <body>
 
-<header>
+<header class="top">
 <h1>🔧 MachineMate</h1>
-<p>Machine maintenance, fault finding & service tracking</p>
+<p>Maintenance • Fault Finding • Engineering</p>
 </header>
 
-<main>
+<main class="wrap">
 
-<!-- HOME -->
-<section id="homeView" class="view active">
+<section id="home" class="view active">
+
+<div class="hero">
+<h2>Maintenance control centre</h2>
+<p id="homeSub">Track machines, jobs, faults, inspections and engineering data.</p>
+</div>
+
+<div class="grid" id="stats"></div>
+
+<div id="alerts"></div>
 
 <div class="card">
-<h2>Dashboard</h2>
-<p class="small">Machine maintenance overview</p>
+<div class="row">
+<h2 style="margin:0">Upcoming maintenance</h2>
+<button class="small" onclick="openMaintenance()">+ Job</button>
 </div>
-
-<div class="stats">
-<div class="stat">
-<strong id="statMachines">0</strong>
-<span>Machines</span>
-</div>
-
-<div class="stat">
-<strong id="statFaults">0</strong>
-<span>Open Faults</span>
-</div>
-
-<div class="stat">
-<strong id="statDue">0</strong>
-<span>Open Maintenance</span>
-</div>
-
-<div class="stat">
-<strong id="statCompleted">0</strong>
-<span>Completed Jobs</span>
-</div>
+<div id="upcoming" class="list" style="margin-top:10px"></div>
 </div>
 
 <div class="card">
-<h3>Quick Actions</h3>
-<button onclick="openMachineModal()">➕ Add Machine</button>
-<button onclick="openMaintenanceModal()">🔧 Add Maintenance</button>
-<button onclick="openFaultModal()">⚠️ Log Fault</button>
-<button onclick="showView('faults')">📖 Fault Guides</button>
+<div class="row">
+<h2 style="margin:0">Recent activity</h2>
+<button class="small secondary" onclick="showView('history')">History</button>
 </div>
-
-<div class="card">
-<h3>Recent Activity</h3>
-<div id="recentActivity"></div>
+<div id="recent" style="margin-top:10px"></div>
 </div>
 
 </section>
 
-<!-- MACHINES -->
-<section id="machinesView" class="view">
 
-<div class="card">
-<h2>🏭 Machines</h2>
-<button onclick="openMachineModal()">➕ Add Machine</button>
+<section id="machines" class="view">
+
+<div class="row">
+<h2>Machines</h2>
+<button onclick="openMachine()">+ Machine</button>
 </div>
 
-<input
-id="machineSearch"
-placeholder="Search machines..."
+<input class="search" id="machineSearch"
+placeholder="Search machine, asset, serial, location"
 oninput="renderMachines()">
 
-<div id="machineList"></div>
+<div id="machineList" class="list"></div>
 
 </section>
 
-<!-- MAINTENANCE -->
-<section id="maintenanceView" class="view">
 
-<div class="card">
-<h2>🔧 Maintenance</h2>
-<button onclick="openMaintenanceModal()">➕ Add Maintenance</button>
+<section id="maintenance" class="view">
+
+<div class="row">
+<h2>Maintenance</h2>
+<button onclick="openMaintenance()">+ Job</button>
 </div>
 
-<div id="maintenanceList"></div>
+<input class="search" id="maintSearch"
+placeholder="Search maintenance"
+oninput="renderMaintenance()">
+
+<div class="card">
+<div class="row">
+<b>Schedule</b>
+<span class="muted">Calendar + recurring jobs</span>
+</div>
+
+<div id="calendar" style="margin-top:10px"></div>
+</div>
+
+<div id="maintList" class="list"></div>
 
 </section>
 
-<!-- FAULTS -->
-<section id="faultsView" class="view">
 
-<div class="card">
-<h2>⚠️ Fault Finding</h2>
-<button onclick="openFaultModal()">➕ Log Fault</button>
+<section id="faults" class="view">
+
+<div class="row">
+<h2>Faults</h2>
+<button onclick="openFault()">+ Fault</button>
 </div>
 
-<div id="faultList"></div>
+<input class="search" id="faultSearch"
+placeholder="Search faults"
+oninput="renderFaults()">
 
-<div class="card">
-<h3>📖 Troubleshooting Guides</h3>
-<p class="small">General troubleshooting information only.</p>
-<div id="guideList"></div>
-</div>
+<div id="faultList" class="list"></div>
 
 </section>
 
-<!-- MORE -->
-<section id="moreView" class="view">
 
-<div class="card">
-<h2>More</h2>
-<button onclick="showView('checklists')">🦺 Safety Checklists</button>
-<button onclick="showView('history')">📋 History</button>
-<button onclick="showView('settings')">⚙️ Settings</button>
+<section id="workorders" class="view">
+
+<div class="row">
+<h2>Work Orders</h2>
+<button onclick="openWO()">+ Work Order</button>
 </div>
+
+<div id="woList" class="list"></div>
 
 </section>
 
-<!-- CHECKLIST -->
-<section id="checklistsView" class="view">
 
-<div class="card">
-<h2>🦺 Safety Checklist</h2>
+<section id="inspections" class="view">
 
-<div id="checklist"></div>
-
-<div class="warning">
-⚠️ <strong>SAFETY</strong><br>
-Follow workplace procedures, risk assessments, manufacturer's
-instructions and isolation/LOTO requirements. Do not perform work
-outside your qualifications, training or authorisation.
-Electrical testing, isolation, wiring, controls and electrical repairs
-must be performed by a suitably qualified electrician.
+<div class="row">
+<h2>Inspections</h2>
+<button onclick="openInspection()">+ Inspection</button>
 </div>
-</div>
+
+<div id="inspectionList" class="list"></div>
 
 </section>
 
-<!-- HISTORY -->
-<section id="historyView" class="view">
 
-<div class="card">
-<h2>📋 History</h2>
-<div id="historyList"></div>
+<section id="parts" class="view">
+
+<div class="row">
+<h2>Parts & Inventory</h2>
+<button onclick="openPart()">+ Part</button>
 </div>
+
+<div id="partsList" class="list"></div>
 
 </section>
 
-<!-- SETTINGS -->
-<section id="settingsView" class="view">
 
-<div class="card">
-<h2>⚙️ Settings</h2>
-<p class="small">
-MachineMate stores information locally on this device/browser.
-</p>
+<section id="shutdowns" class="view">
+
+<div class="row">
+<h2>Planned Shutdowns</h2>
+<button onclick="openShutdown()">+ Shutdown</button>
 </div>
 
-<div class="card">
-<h3>📄 PDF Service Report</h3>
+<div id="shutdownList" class="list"></div>
+
+</section>
+
+
+<section id="analytics" class="view">
+
+<h2>Analytics & Reports</h2>
+
+<div id="analyticsContent"></div>
+
+</section>
+
+
+<section id="engineering" class="view">
+
+<h2>Engineering Mode</h2>
+
+<div class="hero">
+<h2>Engineering calculators</h2>
 <p>
-Create a professional report containing machine information,
-maintenance records, faults and history.
+Use for estimates and field calculations.
+Verify results against manufacturer data,
+applicable standards and competent engineering review
+before design or safety decisions.
 </p>
-<button onclick="exportPDF()">📄 Export PDF Report</button>
 </div>
 
-<div class="card">
-<h3>💾 Data Backup</h3>
-<p class="small">
-Save your MachineMate data as a backup file.
-</p>
-<button class="secondary" onclick="exportData()">
-Export Data Backup
+<div id="engineeringContent"></div>
+
+</section>
+
+
+<section id="knowledge" class="view">
+
+<h2>Knowledge Base</h2>
+
+<input class="search"
+id="guideSearch"
+placeholder="Search hydraulic, mechanical, pneumatic, lubrication..."
+oninput="renderKnowledge()">
+
+<div id="guideList" class="list"></div>
+
+</section>
+
+
+<section id="history" class="view">
+
+<h2>Machine History & Audit Trail</h2>
+
+<input class="search"
+id="historySearch"
+placeholder="Search history"
+oninput="renderHistory()">
+
+<div id="historyList"></div>
+
+</section>
+
+
+<section id="more" class="view">
+
+<h2>More</h2>
+
+<div class="grid">
+
+<button class="card" onclick="showView('workorders')">
+🧰<br>Work Orders
 </button>
+
+<button class="card" onclick="showView('inspections')">
+✅<br>Inspections
+</button>
+
+<button class="card" onclick="showView('parts')">
+📦<br>Parts
+</button>
+
+<button class="card" onclick="showView('shutdowns')">
+🛠️<br>Shutdowns
+</button>
+
+<button class="card" onclick="showView('analytics')">
+📊<br>Reports
+</button>
+
+<button class="card" onclick="showView('engineering')">
+📐<br>Engineering Mode
+</button>
+
+<button class="card" onclick="showView('knowledge')">
+📚<br>Knowledge
+</button>
+
+<button class="card" onclick="showView('history')">
+🕒<br>History
+</button>
+
 </div>
 
 <div class="card">
-<h3>📥 Restore Data</h3>
+
+<h3>Data & Settings</h3>
+
+<div class="actions">
+
+<button onclick="exportData()">
+Backup Data
+</button>
+
+<button class="secondary"
+onclick="document.getElementById('importFile').click()">
+Restore Data
+</button>
+
+<button class="secondary"
+onclick="printReport()">
+PDF / Print Report
+</button>
+
+<button class="danger"
+onclick="clearData()">
+Clear All Data
+</button>
+
+</div>
+
 <input
-type="file"
 id="importFile"
-accept=".json,application/json">
-<button class="secondary" onclick="importData()">
-Import Data Backup
-</button>
-</div>
+type="file"
+accept="application/json"
+onchange="importData(event)"
+style="display:none">
 
-<div class="card">
-<h3>🗑️ Clear Data</h3>
-<p class="small">
-This permanently removes MachineMate data from this browser.
-</p>
-<button class="danger" onclick="clearAllData()">
-Delete All Data
-</button>
-</div>
-
-<div class="card">
-<h3>MachineMate</h3>
-<p class="small">
-Local version • Machine maintenance & fault finding
-</p>
 </div>
 
 </section>
 
 </main>
 
-<!-- NAV -->
-<nav class="bottom-nav">
 
-<button id="nav-home" onclick="showView('home')">
+<nav class="nav">
+
+<button onclick="showView('home')" data-view="home" class="active">
 <span>🏠</span>Home
 </button>
 
-<button id="nav-machines" onclick="showView('machines')">
+<button onclick="showView('machines')" data-view="machines">
 <span>🏭</span>Machines
 </button>
 
-<button id="nav-maintenance" onclick="showView('maintenance')">
+<button onclick="showView('maintenance')" data-view="maintenance">
 <span>🔧</span>Maintenance
 </button>
 
-<button id="nav-faults" onclick="showView('faults')">
+<button onclick="showView('faults')" data-view="faults">
 <span>⚠️</span>Faults
 </button>
 
-<button id="nav-more" onclick="showView('more')">
+<button onclick="showView('more')" data-view="more">
 <span>☰</span>More
 </button>
 
 </nav>
 
-<!-- MACHINE MODAL -->
-<div class="modal" id="machineModal">
-<div class="modalbox">
 
-<h2>➕ Add Machine</h2>
+<button class="fab" onclick="quickAdd()">+</button>
 
-<label>Machine Name</label>
-<input id="machineName" placeholder="e.g. Hydraulic Press 1">
 
-<label>Asset / ID</label>
-<input id="machineAsset" placeholder="e.g. HP-001">
+<div id="modal" class="modal">
 
-<label>Make / Model</label>
-<input id="machineModel">
+<div class="sheet">
 
-<label>Location</label>
-<input id="machineLocation">
+<button class="close" onclick="closeModal()">×</button>
 
-<label>Serial Number</label>
-<input id="machineSerial">
-
-<label>Notes</label>
-<textarea id="machineNotes"></textarea>
-
-<button onclick="saveMachine()">Save Machine</button>
-<button class="secondary" onclick="closeModal('machineModal')">
-Cancel
-</button>
+<div id="modalBody"></div>
 
 </div>
-</div>
-
-<!-- MAINTENANCE MODAL -->
-<div class="modal" id="maintenanceModal">
-<div class="modalbox">
-
-<h2>🔧 Add Maintenance</h2>
-
-<label>Machine</label>
-<select id="maintenanceMachine"></select>
-
-<label>Task</label>
-<input id="maintenanceTask" placeholder="e.g. Grease main bearings">
-
-<label>Due Date</label>
-<input id="maintenanceDue" type="date">
-
-<label>Interval</label>
-<input id="maintenanceInterval" placeholder="e.g. 250 hours / monthly">
-
-<label>Notes</label>
-<textarea id="maintenanceNotes"></textarea>
-
-<button onclick="saveMaintenance()">Save Maintenance</button>
-<button class="secondary" onclick="closeModal('maintenanceModal')">
-Cancel
-</button>
 
 </div>
-</div>
 
-<!-- FAULT MODAL -->
-<div class="modal" id="faultModal">
-<div class="modalbox">
-
-<h2>⚠️ Log Fault</h2>
-
-<label>Machine</label>
-<select id="faultMachine"></select>
-
-<label>System</label>
-<select id="faultSystem">
-<option>Hydraulic</option>
-<option>Mechanical</option>
-<option>Pneumatic</option>
-<option>Lubrication</option>
-<option>Electrical - visual only</option>
-<option>General Machine</option>
-</select>
-
-<label>Symptom</label>
-<input id="faultSymptom">
-
-<label>Possible Cause</label>
-<textarea id="faultCause"></textarea>
-
-<label>Checks Performed</label>
-<textarea id="faultChecks"></textarea>
-
-<label>Corrective Action</label>
-<textarea id="faultAction"></textarea>
-
-<label>Priority</label>
-<select id="faultPriority">
-<option>Low</option>
-<option selected>Medium</option>
-<option>High</option>
-<option>Critical</option>
-</select>
-
-<label>Status</label>
-<select id="faultStatus">
-<option selected>Open</option>
-<option>In Progress</option>
-<option>Closed</option>
-</select>
-
-<button onclick="saveFault()">Save Fault</button>
-<button class="secondary" onclick="closeModal('faultModal')">
-Cancel
-</button>
-
-</div>
-</div>
-
-<!-- MACHINE DETAILS -->
-<div class="modal" id="detailsModal">
-<div class="modalbox" id="detailsContent"></div>
-</div>
-
-<!-- GUIDE -->
-<div class="modal" id="guideModal">
-<div class="modalbox" id="guideContent"></div>
-</div>
-
-<!-- PRINT REPORT -->
-<div id="printReport"></div>
 
 <script>
 
 const STORAGE_KEY="machinemate_full_v1";
 
-let data=JSON.parse(localStorage.getItem(STORAGE_KEY))||{
+const empty={
 machines:[],
 maintenance:[],
 faults:[],
-history:[]
+history:[],
+workorders:[],
+inspections:[],
+parts:[],
+shutdowns:[],
+suppliers:[],
+documents:[],
+settings:{
+notifications:false
+}
 };
 
-function saveData(){
-localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-refresh();
+let db=loadData();
+
+function loadData(){
+
+try{
+
+const old=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+
+if(!old)return structuredClone(empty);
+
+return {
+...structuredClone(empty),
+...old,
+settings:{
+...empty.settings,
+...(old.settings||{})
+}
+};
+
+}catch(e){
+
+return structuredClone(empty);
+
+}
+
+}
+
+function save(){
+
+localStorage.setItem(
+STORAGE_KEY,
+JSON.stringify(db)
+);
+
+}
+
+function uid(){
+
+return Date.now().toString(36)+
+Math.random().toString(36).slice(2,8);
+
+}
+
+function today(){
+
+return new Date().toISOString().slice(0,10);
+
+}
+
+function fmt(v){
+
+if(!v)return"—";
+
+const d=new Date(v+"T00:00:00");
+
+return d.toLocaleDateString("en-AU");
+
+}
+
+function money(v){
+
+return "$"+Number(v||0).toFixed(2);
+
 }
 
 function esc(v){
+
 return String(v??"")
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
+
 }
 
-function now(){
-return new Date().toLocaleString("en-AU");
+function machine(id){
+
+return db.machines.find(
+m=>String(m.id)===String(id)
+);
+
 }
 
-function machineName(id){
-const m=data.machines.find(x=>x.id===id);
-return m?m.name:"Unknown Machine";
+function mname(id){
+
+return machine(id)?.name||"Unknown machine";
+
 }
 
-function showView(view){
+function audit(action,type,id,extra=""){
 
-document.querySelectorAll(".view")
-.forEach(x=>x.classList.remove("active"));
+db.history.unshift({
 
-const target=document.getElementById(view+"View");
+id:uid(),
 
-if(target)target.classList.add("active");
+action,
 
-document.querySelectorAll(".bottom-nav button")
-.forEach(x=>x.classList.remove("active"));
+type,
 
-const nav=document.getElementById("nav-"+view);
+recordId:id,
 
-if(nav)nav.classList.add("active");
+extra,
 
-refresh();
+time:new Date().toISOString()
 
-window.scrollTo(0,0);
-}
-
-function closeModal(id){
-document.getElementById(id).classList.remove("show");
-}
-
-/* MACHINES */
-
-function openMachineModal(){
-
-document.getElementById("machineName").value="";
-document.getElementById("machineAsset").value="";
-document.getElementById("machineModel").value="";
-document.getElementById("machineLocation").value="";
-document.getElementById("machineSerial").value="";
-document.getElementById("machineNotes").value="";
-
-document.getElementById("machineModal").classList.add("show");
-}
-
-function saveMachine(){
-
-const name=document.getElementById("machineName").value.trim();
-
-if(!name){
-alert("Enter a machine name.");
-return;
-}
-
-const machine={
-id:Date.now(),
-name:name,
-asset:document.getElementById("machineAsset").value.trim(),
-model:document.getElementById("machineModel").value.trim(),
-location:document.getElementById("machineLocation").value.trim(),
-serial:document.getElementById("machineSerial").value.trim(),
-notes:document.getElementById("machineNotes").value.trim(),
-created:now()
-};
-
-data.machines.push(machine);
-
-data.history.unshift({
-type:"Machine Added",
-text:machine.name,
-date:now()
 });
 
-saveData();
+db.history=db.history.slice(0,1000);
 
-closeModal("machineModal");
-showView("machines");
+save();
+
 }
+
+
+function showView(id){
+
+document.querySelectorAll(".view")
+.forEach(v=>v.classList.remove("active"));
+
+document.getElementById(id)
+?.classList.add("active");
+
+document.querySelectorAll(".nav button")
+.forEach(b=>b.classList.toggle(
+"active",
+b.dataset.view===id
+));
+
+renderAll();
+
+window.scrollTo(0,0);
+
+}
+
+
+function closeModal(){
+
+document.getElementById("modal")
+.classList.remove("show");
+
+}
+
+
+function openModal(html){
+
+document.getElementById("modalBody").innerHTML=html;
+
+document.getElementById("modal")
+.classList.add("show");
+
+}
+
+
+function input(id,label,value="",type="text"){
+
+return `
+<div class="field">
+<label>${label}</label>
+<input id="${id}" type="${type}" value="${esc(value)}">
+</div>
+`;
+
+}
+
+
+function select(id,label,options,value=""){
+
+return `
+<div class="field">
+<label>${label}</label>
+<select id="${id}">
+${options.map(x=>`
+<option ${String(x)===String(value)?"selected":""}>
+${esc(x)}
+</option>
+`).join("")}
+</select>
+</div>
+`;
+
+}
+
+
+function num(id){
+
+return Number(document.getElementById(id)?.value||0);
+
+}
+
+
+function openMachine(id=null){
+
+const m=id?machine(id):null;
+
+openModal(`
+
+<h2>${m?"Edit":"Add"} Machine</h2>
+
+<div class="grid">
+
+${input("mn","Machine name",m?.name||"")}
+
+${input("ma","Asset number",m?.asset||"")}
+
+${input("mman","Manufacturer",m?.manufacturer||"")}
+
+${input("mmodel","Model",m?.model||"")}
+
+${input("msn","Serial number",m?.serial||"")}
+
+${input("mloc","Location",m?.location||"")}
+
+${input("mdept","Owner / Department",m?.department||"")}
+
+${input("mcommission","Commissioning date",m?.commissioning||"","date")}
+
+${input("mpurchase","Purchase date",m?.purchase||"","date")}
+
+${input("mwarranty","Warranty expiry",m?.warranty||"","date")}
+
+${input("mhours","Operating hours",m?.hours||0,"number")}
+
+${select(
+"mcritical",
+"Criticality",
+["Low","Medium","High","Critical"],
+m?.critical||"Medium"
+)}
+
+${select(
+"mstatus",
+"Status",
+[
+"Operational",
+"Maintenance Due",
+"Under Investigation",
+"Out of Service",
+"Under Maintenance",
+"Decommissioned"
+],
+m?.status||"Operational"
+)}
+
+</div>
+
+${input("mphoto","Machine photo URL",m?.photo||"")}
+
+${input("mmanual","Manufacturer manual/document URL",m?.manual||"")}
+
+<div class="field">
+
+<label>Machine notes</label>
+
+<textarea id="mnotes">${esc(m?.notes||"")}</textarea>
+
+</div>
+
+<div class="actions">
+
+<button onclick="saveMachine('${id||""}')">
+Save Machine
+</button>
+
+${id?`
+<button class="secondary"
+onclick="machineDetail('${id}')">
+Open Dashboard
+</button>
+`:``}
+
+</div>
+
+`);
+
+}
+
+
+function saveMachine(id){
+
+const data={
+
+name:document.getElementById("mn").value.trim(),
+
+asset:document.getElementById("ma").value.trim(),
+
+manufacturer:document.getElementById("mman").value.trim(),
+
+model:document.getElementById("mmodel").value.trim(),
+
+serial:document.getElementById("msn").value.trim(),
+
+location:document.getElementById("mloc").value.trim(),
+
+department:document.getElementById("mdept").value.trim(),
+
+commissioning:document.getElementById("mcommission").value,
+
+purchase:document.getElementById("mpurchase").value,
+
+warranty:document.getElementById("mwarranty").value,
+
+hours:num("mhours"),
+
+critical:document.getElementById("mcritical").value,
+
+status:document.getElementById("mstatus").value,
+
+photo:document.getElementById("mphoto").value.trim(),
+
+manual:document.getElementById("mmanual").value.trim(),
+
+notes:document.getElementById("mnotes").value
+
+};
+
+if(!data.name){
+
+alert("Enter a machine name.");
+
+return;
+
+}
+
+if(id){
+
+const m=machine(id);
+
+Object.assign(m,data);
+
+audit("Updated","machine",id);
+
+}else{
+
+const n={
+
+id:uid(),
+
+...data,
+
+created:new Date().toISOString()
+
+};
+
+db.machines.push(n);
+
+audit("Created","machine",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
 
 function renderMachines(){
 
-const list=document.getElementById("machineList");
+const q=(document.getElementById("machineSearch")?.value||"").toLowerCase();
 
-const search=(
-document.getElementById("machineSearch")?.value||""
-).toLowerCase();
-
-const machines=data.machines.filter(m=>
-JSON.stringify(m).toLowerCase().includes(search)
+const arr=db.machines.filter(m=>
+[m.name,m.asset,m.serial,m.location,m.model,m.manufacturer]
+.join(" ")
+.toLowerCase()
+.includes(q)
 );
 
-if(!machines.length){
-list.innerHTML='<div class="empty">No machines found.</div>';
-return;
-}
+document.getElementById("machineList").innerHTML=
+arr.length?
+arr.map(m=>`
 
-list.innerHTML=machines.map(m=>{
-
-const faults=data.faults.filter(
-f=>f.machineId===m.id&&f.status!=="Closed"
-).length;
-
-const maintenance=data.maintenance.filter(
-x=>x.machineId===m.id&&!x.done
-).length;
-
-return `
 <div class="item">
-<h3>🏭 ${esc(m.name)}</h3>
-<p>${esc(m.asset||"No asset ID")} • ${esc(m.model||"No model")}</p>
-<p>📍 ${esc(m.location||"No location")}</p>
 
-<span class="badge">${faults} open faults</span>
-<span class="badge">${maintenance} open maintenance</span>
+<div class="row">
 
-<br>
-<button class="smallbtn" onclick="machineDetails(${m.id})">
-View Machine
-</button>
+<div>
+
+<h3>${esc(m.name)}</h3>
+
+<div class="muted">
+${esc(m.manufacturer)} ${esc(m.model)}
 </div>
-`;
 
-}).join("");
+</div>
+
+<span class="badge ${m.status==="Operational"?"green":m.status==="Out of Service"?"red":"orange"}">
+${esc(m.status)}
+</span>
+
+</div>
+
+<p>
+Asset: <b>${esc(m.asset||"—")}</b>
+•
+S/N: ${esc(m.serial||"—")}
+</p>
+
+<p class="muted">
+${esc(m.location||"No location")}
+•
+${m.hours||0} operating hours
+</p>
+
+<div class="actions">
+
+<button class="small"
+onclick="machineDetail('${m.id}')">
+Dashboard
+</button>
+
+<button class="small secondary"
+onclick="openMachine('${m.id}')">
+Edit
+</button>
+
+<button class="small secondary"
+onclick="printMachine('${m.id}')">
+Report
+</button>
+
+</div>
+
+</div>
+
+`).join(""):
+`<div class="empty">No machines yet.</div>`;
+
 }
 
-function machineDetails(id){
 
-const m=data.machines.find(x=>x.id===id);
+function machineDetail(id){
+
+const m=machine(id);
 
 if(!m)return;
 
-const faults=data.faults.filter(f=>f.machineId===id);
-const maintenance=data.maintenance.filter(x=>x.machineId===id);
-
-document.getElementById("detailsContent").innerHTML=`
-
-<h2>🏭 ${esc(m.name)}</h2>
-
-<div class="card">
-<h3>Machine Information</h3>
-<p><strong>Asset:</strong> ${esc(m.asset||"-")}</p>
-<p><strong>Make / Model:</strong> ${esc(m.model||"-")}</p>
-<p><strong>Location:</strong> ${esc(m.location||"-")}</p>
-<p><strong>Serial:</strong> ${esc(m.serial||"-")}</p>
-<p><strong>Notes:</strong> ${esc(m.notes||"-")}</p>
-</div>
-
-<div class="card">
-<h3>⚠️ Faults</h3>
-<p>${faults.length} recorded fault(s).</p>
-
-${faults.map(f=>`
-<div class="guide">
-<strong>${esc(f.symptom)}</strong>
-<br>
-${esc(f.system)} • ${esc(f.priority)} • ${esc(f.status)}
-</div>
-`).join("")||'<p class="small">No faults recorded.</p>'}
-
-</div>
-
-<div class="card">
-<h3>🔧 Maintenance</h3>
-<p>${maintenance.length} record(s).</p>
-
-${maintenance.map(x=>`
-<div class="guide">
-<strong>${esc(x.task)}</strong>
-<br>
-${x.done?"Completed":"Open"} • Due ${esc(x.due||"-")}
-</div>
-`).join("")||'<p class="small">No maintenance recorded.</p>'}
-
-</div>
-
-<button onclick="closeModal('detailsModal')">Close</button>
-`;
-
-document.getElementById("detailsModal").classList.add("show");
-}
-
-/* MAINTENANCE */
-
-function populateMachineSelects(){
-
-const options=data.machines.length
-?data.machines.map(m=>
-`<option value="${m.id}">${esc(m.name)}</option>`
-).join("")
-:'<option value="">No machines added</option>';
-
-document.getElementById("maintenanceMachine").innerHTML=options;
-document.getElementById("faultMachine").innerHTML=options;
-}
-
-function openMaintenanceModal(){
-
-if(!data.machines.length){
-alert("Add a machine first.");
-return;
-}
-
-populateMachineSelects();
-
-document.getElementById("maintenanceTask").value="";
-document.getElementById("maintenanceDue").value="";
-document.getElementById("maintenanceInterval").value="";
-document.getElementById("maintenanceNotes").value="";
-
-document.getElementById("maintenanceModal").classList.add("show");
-}
-
-function saveMaintenance(){
-
-const machineId=Number(
-document.getElementById("maintenanceMachine").value
+const jobs=db.maintenance.filter(x=>
+String(x.machineId)===String(id)
 );
 
-const task=document.getElementById("maintenanceTask").value.trim();
-
-if(!machineId||!task){
-alert("Select a machine and enter a task.");
-return;
-}
-
-const record={
-id:Date.now(),
-machineId:machineId,
-task:task,
-due:document.getElementById("maintenanceDue").value,
-interval:document.getElementById("maintenanceInterval").value.trim(),
-notes:document.getElementById("maintenanceNotes").value.trim(),
-done:false,
-created:now()
-};
-
-data.maintenance.push(record);
-
-data.history.unshift({
-type:"Maintenance Added",
-text:machineName(machineId)+" — "+task,
-date:now()
-});
-
-saveData();
-
-closeModal("maintenanceModal");
-showView("maintenance");
-}
-
-function completeMaintenance(id){
-
-const item=data.maintenance.find(x=>x.id===id);
-
-if(!item)return;
-
-item.done=true;
-item.completed=now();
-
-data.history.unshift({
-type:"Maintenance Completed",
-text:machineName(item.machineId)+" — "+item.task,
-date:now()
-});
-
-saveData();
-}
-
-function renderMaintenance(){
-
-const list=document.getElementById("maintenanceList");
-
-if(!data.maintenance.length){
-list.innerHTML='<div class="empty">No maintenance records.</div>';
-return;
-}
-
-const sorted=[...data.maintenance]
-.sort((a,b)=>Number(a.done)-Number(b.done));
-
-list.innerHTML=sorted.map(x=>`
-
-<div class="item">
-
-<h3>🔧 ${esc(x.task)}</h3>
-
-<p>
-<strong>Machine:</strong>
-${esc(machineName(x.machineId))}
-</p>
-
-<p>
-<strong>Due:</strong>
-${esc(x.due||"Not specified")}
-</p>
-
-${x.interval?
-`<p><strong>Interval:</strong> ${esc(x.interval)}</p>`:""}
-
-${x.notes?
-`<p>${esc(x.notes)}</p>`:""}
-
-${
-x.done
-?
-`
-<span class="badge green">Completed</span>
-<span class="small">${esc(x.completed||"")}</span>
-`
-:
-`
-<span class="badge orange">Open</span>
-<br>
-<button class="smallbtn" onclick="completeMaintenance(${x.id})">
-✓ Complete
-</button>
-`
-}
-
-</div>
-
-`).join("");
-}
-
-/* FAULTS */
-
-function openFaultModal(){
-
-if(!data.machines.length){
-alert("Add a machine first.");
-return;
-}
-
-populateMachineSelects();
-
-document.getElementById("faultSymptom").value="";
-document.getElementById("faultCause").value="";
-document.getElementById("faultChecks").value="";
-document.getElementById("faultAction").value="";
-document.getElementById("faultPriority").value="Medium";
-document.getElementById("faultStatus").value="Open";
-
-document.getElementById("faultModal").classList.add("show");
-}
-
-function saveFault(){
-
-const machineId=Number(
-document.getElementById("faultMachine").value
+const faults=db.faults.filter(x=>
+String(x.machineId)===String(id)
 );
 
-const symptom=document.getElementById("faultSymptom").value.trim();
+const wo=db.workorders.filter(x=>
+String(x.machineId)===String(id)
+);
 
-if(!machineId||!symptom){
-alert("Select a machine and enter the symptom.");
-return;
-}
+const ins=db.inspections.filter(x=>
+String(x.machineId)===String(id)
+);
 
-const fault={
-id:Date.now(),
-machineId:machineId,
-system:document.getElementById("faultSystem").value,
-symptom:symptom,
-cause:document.getElementById("faultCause").value.trim(),
-checks:document.getElementById("faultChecks").value.trim(),
-action:document.getElementById("faultAction").value.trim(),
-priority:document.getElementById("faultPriority").value,
-status:document.getElementById("faultStatus").value,
-created:now()
-};
+const parts=db.parts.filter(x=>
+String(x.machineId)===String(id)
+);
 
-data.faults.push(fault);
+openModal(`
 
-data.history.unshift({
-type:"Fault Logged",
-text:machineName(machineId)+" — "+symptom,
-date:now()
-});
+<h2>${esc(m.name)}</h2>
 
-saveData();
+<div class="hero">
 
-closeModal("faultModal");
-showView("faults");
-}
-
-function closeFault(id){
-
-const f=data.faults.find(x=>x.id===id);
-
-if(!f)return;
-
-f.status="Closed";
-f.closed=now();
-
-data.history.unshift({
-type:"Fault Closed",
-text:machineName(f.machineId)+" — "+f.symptom,
-date:now()
-});
-
-saveData();
-}
-
-function renderFaults(){
-
-const list=document.getElementById("faultList");
-
-if(!data.faults.length){
-list.innerHTML='<div class="empty">No faults logged.</div>';
-return;
-}
-
-list.innerHTML=[...data.faults].reverse().map(f=>`
-
-<div class="item">
-
-<h3>⚠️ ${esc(f.symptom)}</h3>
+<h2>${esc(m.status)}</h2>
 
 <p>
-<strong>Machine:</strong>
-${esc(machineName(f.machineId))}
+${esc(m.manufacturer)}
+${esc(m.model)}
+•
+Asset ${esc(m.asset||"—")}
 </p>
 
-<span class="badge">${esc(f.system)}</span>
-<span class="badge">${esc(f.priority)}</span>
-<span class="badge ${f.status==="Closed"?"green":"red"}">
-${esc(f.status)}
-</span>
+</div>
 
-${f.cause?
-`<p><strong>Possible Cause:</strong> ${esc(f.cause)}</p>`:""}
+<div class="grid">
 
-${f.checks?
-`<p><strong>Checks:</strong> ${esc(f.checks)}</p>`:""}
+<div class="stat">
+<b>${jobs.length}</b>
+<span class="muted">Maintenance jobs</span>
+</div>
 
-${f.action?
-`<p><strong>Corrective Action:</strong> ${esc(f.action)}</p>`:""}
+<div class="stat">
+<b>${faults.filter(x=>x.status!=="Closed").length}</b>
+<span class="muted">Open faults</span>
+</div>
 
-${
-f.status!=="Closed"
-?
-`<button class="smallbtn" onclick="closeFault(${f.id})">
-✓ Close Fault
-</button>`
-:""
-}
+<div class="stat">
+<b>${wo.filter(x=>x.status!=="Complete").length}</b>
+<span class="muted">Open WOs</span>
+</div>
+
+<div class="stat">
+<b>${m.hours||0}</b>
+<span class="muted">Operating hours</span>
+</div>
 
 </div>
 
-`).join("");
-}
+<div class="card">
 
-/* GUIDES */
+<h3>Asset information</h3>
 
-const guides=[
+<p>Manufacturer: ${esc(m.manufacturer||"—")}</p>
+<p>Model: ${esc(m.model||"—")}</p>
+<p>Serial: ${esc(m.serial||"—")}</p>
+<p>Asset: ${esc(m.asset||"—")}</p>
+<p>Location: ${esc(m.location||"—")}</p>
+<p>Department: ${esc(m.department||"—")}</p>
+<p>Criticality: ${esc(m.critical||"—")}</p>
+<p>Warranty: ${fmt(m.warranty)}</p>
 
-["Hydraulic","Low / No Hydraulic Pressure",
-"Low oil level, suction restriction, pump wear, relief valve problem, unloading condition or internal leakage.",
-"Check oil level and condition. Inspect accessible suction lines and connections. Observe pump noise, temperature and pressure indication.",
-"Investigate the hydraulic circuit systematically and follow manufacturer specifications."],
-
-["Hydraulic","Pressure Drops Under Load",
-"Pump wear, relief valve opening, internal leakage, restricted flow or insufficient pump capacity.",
-"Compare unloaded and loaded machine behaviour. Observe pressure, temperature, noise and visible leakage.",
-"Investigate the cause using approved hydraulic testing procedures."],
-
-["Hydraulic","Slow Hydraulic Operation",
-"Low flow, restricted filter, low drive speed, pump wear, flow-control setting or internal leakage.",
-"Check oil level, filter indication, temperature and obvious restrictions.",
-"Investigate pump, valves and actuator condition."],
-
-["Hydraulic","Erratic Hydraulic Movement",
-"Aerated oil, contamination, sticking valve, air entering suction side or mechanical binding.",
-"Observe reservoir condition, oil level, hoses and cylinder movement.",
-"Correct air entry or contamination and investigate valve/mechanical condition."],
-
-["Hydraulic","Hydraulic Overheating",
-"Excessive pressure, relief flow, restricted flow, incorrect oil, low oil level, cooler restriction or internal leakage.",
-"Check oil level, temperature, cooler condition, filters and obvious restrictions.",
-"Find the source of heat generation and correct it."],
-
-["Hydraulic","Noisy / Cavitating Hydraulic Pump",
-"Low oil level, restricted suction, blocked breather, incorrect viscosity, air entry or excessive speed.",
-"Check reservoir level, suction hose condition and connections. Observe abnormal noise.",
-"Correct suction-side problems before continued operation."],
-
-["Hydraulic","Cylinder Drifting",
-"Internal cylinder leakage, valve leakage, hose failure or external mechanical load.",
-"Observe cylinder movement with controls neutral and check for external leakage.",
-"Isolate the cause using approved hydraulic procedures."],
-
-["Hydraulic","Hydraulic Cylinder Will Not Move",
-"No pressure or flow, valve problem, mechanical obstruction, damaged cylinder or hose restriction.",
-"Observe hoses, fittings, controls and obvious mechanical obstruction.",
-"Follow the hydraulic schematic and manufacturer's procedure."],
-
-["Hydraulic","Hydraulic Oil Leak",
-"Damaged hose, loose fitting, failed seal, cracked component or damaged tube.",
-"Visually locate oil residue. Never place hands near a pressurised leak.",
-"Depressurise and isolate before repair."],
-
-["Hydraulic","Foamy / Aerated Hydraulic Oil",
-"Air entering suction side, low oil level or incorrect return arrangement.",
-"Observe reservoir oil condition, level and suction connections.",
-"Find and correct the source of air entry."],
-
-["Hydraulic","Excessive Pump Case Drain",
-"Internal pump wear or damaged rotating group.",
-"Observe case drain condition and temperature and compare against manufacturer limits.",
-"Carry out approved case-drain testing."],
-
-["Hydraulic","Hydraulic Filter Restriction",
-"Contamination, incorrect filter, collapsed element or excessive flow.",
-"Check restriction indicator and filter condition where safe.",
-"Replace with the correct element and investigate contamination."],
-
-["Mechanical","Bearing Noise",
-"Damage, contamination, poor lubrication, misalignment or excessive load.",
-"Observe noise, temperature, vibration and lubrication condition.",
-"Investigate bearing, alignment and lubrication condition."],
-
-["Mechanical","Bearing Overheating",
-"Over-greasing, under-lubrication, misalignment, excessive load, damaged bearing or incorrect fit.",
-"Observe temperature trend, noise and lubrication history.",
-"Follow bearing manufacturer's requirements."],
-
-["Mechanical","Excessive Vibration",
-"Imbalance, misalignment, looseness, bearing damage, coupling problems or resonance.",
-"Observe vibration location, loose components and abnormal noise.",
-"Inspect alignment, mounting, bearings and rotating components."],
-
-["Mechanical","Shaft / Coupling Problem",
-"Misalignment, wear, loose components, damaged coupling or excessive load.",
-"Visually inspect accessible components and guards.",
-"Isolate before detailed inspection."],
-
-["Mechanical","Belt Problem",
-"Incorrect tension, worn belt, pulley misalignment or contamination.",
-"Observe belt condition and tracking.",
-"Correct tension/alignment and replace damaged components."],
-
-["Mechanical","Chain Problem",
-"Incorrect tension, poor lubrication, worn chain/sprockets or misalignment.",
-"Observe chain condition, lubrication and alignment.",
-"Correct tension/lubrication and replace worn components."],
-
-["Mechanical","Gearbox Noise",
-"Low lubricant, damaged gear, bearing wear, misalignment or excessive load.",
-"Observe noise, temperature, leaks and lubricant condition.",
-"Follow gearbox manufacturer's inspection procedure."],
-
-["Mechanical","Gearbox Overheating",
-"Incorrect lubricant, low lubricant, excessive load, bearing damage or misalignment.",
-"Check lubricant level, temperature trend and obvious leaks.",
-"Correct lubrication issues and investigate load/alignment."],
-
-["Mechanical","Loose Fasteners",
-"Vibration, incorrect torque, damaged threads or repeated loading.",
-"Look for movement, witness marks or missing hardware.",
-"Isolate and torque/repair to specification."],
-
-["Mechanical","Mechanical Misalignment",
-"Incorrect installation, foundation movement, thermal growth or worn components.",
-"Observe coupling, mounting and abnormal vibration.",
-"Carry out an approved alignment procedure."],
-
-["Pneumatic","Low Air Pressure",
-"Compressor issue, regulator setting, filter restriction, excessive demand or air leak.",
-"Observe pressure indication, regulator, filters and obvious leaks.",
-"Investigate supply, demand and leaks."],
-
-["Pneumatic","Pneumatic Cylinder Slow",
-"Low pressure, flow restriction, damaged seals or incorrect flow control.",
-"Observe pressure, hoses, fittings and cylinder movement.",
-"Correct restrictions and investigate cylinder/valve condition."],
-
-["Pneumatic","Air Leak",
-"Damaged hose, fitting, seal or valve.",
-"Listen for leaks and visually inspect accessible components.",
-"Isolate/depressurise before repair."],
-
-["Pneumatic","Pneumatic Cylinder Will Not Move",
-"No air supply, valve issue, mechanical obstruction or damaged cylinder.",
-"Observe pressure, hoses and mechanical obstruction.",
-"Follow the pneumatic schematic."],
-
-["Lubrication","Under-Lubricated Bearing",
-"Insufficient lubricant, incorrect interval or lubricant loss.",
-"Review lubrication history and observe temperature/noise.",
-"Use the correct lubricant and quantity."],
-
-["Lubrication","Over-Greased Bearing",
-"Excessive grease quantity or incorrect procedure.",
-"Observe temperature and lubrication history.",
-"Follow bearing manufacturer's lubrication quantity."],
-
-["Lubrication","Wrong Lubricant",
-"Incorrect viscosity, grease type or incompatible lubricant.",
-"Check lubricant identification against manufacturer requirements.",
-"Use the specified lubricant."],
-
-["General Machine","Machine Overheating",
-"Excessive load, poor lubrication, blocked cooling, bearing damage or hydraulic heat.",
-"Observe temperature, cooling, lubrication and abnormal noise.",
-"Identify the heat source before returning to service."],
-
-["General Machine","Unusual Machine Noise",
-"Bearing wear, looseness, misalignment, lubrication problem or damaged rotating component.",
-"Observe where the noise originates while maintaining a safe position.",
-"Isolate if continued operation could cause damage or danger."],
-
-["General Machine","Unexpected Loss of Performance",
-"Mechanical wear, hydraulic/pneumatic restriction, incorrect settings or component failure.",
-"Compare current behaviour with normal operation and review maintenance history.",
-"Use systematic fault finding and manufacturer documentation."],
-
-["General Machine","Repeated Component Failure",
-"Misalignment, incorrect installation, excessive load, contamination, poor lubrication or underlying system fault.",
-"Review maintenance history and previous failure modes.",
-"Investigate root cause rather than repeatedly replacing the failed component."]
-];
-
-function renderGuides(){
-
-const box=document.getElementById("guideList");
-
-const categories=[...new Set(guides.map(g=>g[0]))];
-
-box.innerHTML=categories.map(cat=>`
-
-<div class="guide">
-
-<h4>${esc(cat)}</h4>
-
-${guides.map((g,i)=>
-g[0]===cat
-?
-`<button
-class="smallbtn secondary"
-onclick="openGuide(${i})">
-${esc(g[1])}
-</button>`
-:""
-).join("")}
+${m.manual?
+`<p><a href="${esc(m.manual)}" target="_blank">Open manufacturer manual</a></p>`
+:""}
 
 </div>
 
-`).join("");
-}
+<div class="actions">
 
-function openGuide(index){
-
-const g=guides[index];
-
-document.getElementById("guideContent").innerHTML=`
-
-<h2>📖 ${esc(g[1])}</h2>
-
-<span class="badge orange">${esc(g[0])}</span>
-
-<div class="guide">
-<h4>Symptom</h4>
-<p>${esc(g[1])}</p>
-</div>
-
-<div class="guide">
-<h4>Possible Causes</h4>
-<p>${esc(g[2])}</p>
-</div>
-
-<div class="guide">
-<h4>Safe Checks / Observations</h4>
-<p>${esc(g[3])}</p>
-</div>
-
-<div class="guide">
-<h4>Recommended Action</h4>
-<p>${esc(g[4])}</p>
-</div>
-
-<div class="warning">
-⚠️ <strong>GUIDE ONLY</strong><br>
-This information is general guidance only. It does not replace
-workplace procedures, risk assessments, manufacturer's instructions,
-isolation/LOTO requirements, permits, training, supervision or the
-judgement of a competent person.
-Do not perform work outside your qualifications, training or
-authorisation.
-Electrical testing, isolation, wiring, controls and electrical repairs
-must be performed by a suitably qualified electrician.
-</div>
-
-<br>
-
-<button onclick="closeModal('guideModal')">
-Close
+<button onclick="openMaintenance(null,'${m.id}')">
++ Maintenance
 </button>
-`;
 
-document.getElementById("guideModal").classList.add("show");
+<button onclick="openFault(null,'${m.id}')">
++ Fault
+</button>
+
+<button onclick="openWO(null,'${m.id}')">
++ Work Order
+</button>
+
+<button onclick="openInspection(null,'${m.id}')">
++ Inspection
+</button>
+
+<button class="secondary"
+onclick="showQR('${m.id}')">
+QR Code
+</button>
+
+<button class="secondary"
+onclick="printMachine('${m.id}')">
+Machine Report
+</button>
+
+</div>
+
+<h3>Machine timeline</h3>
+
+<div class="timeline">
+
+${[
+...jobs.map(x=>({
+time:x.created||x.due,
+text:`Maintenance: ${x.task}`
+})),
+...faults.map(x=>({
+time:x.created,
+text:`Fault: ${x.number} — ${x.symptom}`
+})),
+...wo.map(x=>({
+time:x.created,
+text:`Work Order: ${x.number}`
+})),
+...ins.map(x=>({
+time:x.created,
+text:`Inspection: ${x.type}`
+}))
+]
+.sort((a,b)=>String(b.time).localeCompare(String(a.time)))
+.slice(0,30)
+.map(e=>`
+
+<div class="event">
+
+<b>${esc(e.text)}</b>
+
+<div class="muted">
+${e.time?new Date(e.time).toLocaleString("en-AU"):""}
+</div>
+
+</div>
+
+`).join("")||`<div class="muted">No history.</div>`}
+
+</div>
+
+`);
+
 }
 
-/* CHECKLIST */
 
-function renderChecklist(){
+function openMaintenance(id=null,machineId=""){
 
-const items=[
-"Identify the machine and fault clearly.",
-"Review workplace risk assessment and procedure.",
-"Confirm correct machine documentation is available.",
-"Identify stored energy and hazardous movement.",
-"Apply required isolation / LOTO procedure.",
-"Check for pressure, temperature and other hazards.",
-"Use appropriate PPE.",
-"Do not bypass guards or safety devices.",
-"Stay within your training, qualifications and authorisation.",
-"Electrical testing and electrical repairs must be performed by a qualified electrician."
-];
+const x=id?
+db.maintenance.find(a=>String(a.id)===String(id)):
+null;
 
-document.getElementById("checklist").innerHTML=items.map((x,i)=>`
+openModal(`
 
-<label style="margin:13px 0">
+<h2>${x?"Edit":"Add"} Maintenance</h2>
+
+${select(
+"mmachine",
+"Machine",
+db.machines.map(m=>m.name),
+mname(machineId||x?.machineId||"")
+)}
+
+<div class="field">
+
+<label>Task</label>
+
+<input id="mtask"
+value="${esc(x?.task||"")}"
+placeholder="Service, inspect, lubricate...">
+
+</div>
+
+<div class="grid">
+
+${input("mdue","Due date",x?.due||today(),"date")}
+
+${input("minterval","Repeat every days",x?.interval||"","number")}
+
+${input("mlabour","Labour hours",x?.labour||0,"number")}
+
+${input("mcost","Cost",x?.cost||0,"number")}
+
+${input("mhoursjob","Machine hours",x?.machineHours||0,"number")}
+
+</div>
+
+<div class="field">
+
+<label>Parts / lubricant / quantity</label>
+
+<textarea id="mparts">${esc(x?.parts||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Notes</label>
+
+<textarea id="mnotes2">${esc(x?.notes||"")}</textarea>
+
+</div>
+
+<h3>Safety</h3>
+
+${safetyHTML(x?.safety)}
+
+<div class="actions">
+
+<button onclick="saveMaintenance('${id||""}')">
+Save
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function safetyHTML(s){
+
+s=s||{};
+
+return `
+
+<div class="card">
+
+${[
+["ppe","PPE checked"],
+["loto","Isolation / LOTO confirmed"],
+["stored","Stored energy controlled"],
+["hydraulic","Hydraulic pressure released"],
+["pneumatic","Pneumatic pressure released"],
+["mechanical","Mechanical movement controlled"],
+["guards","Guards checked"],
+["area","Work area safe"],
+["tools","Tools/equipment checked"],
+["environment","Environmental hazards checked"],
+["electrical","Electrical work referred to qualified electrician"]
+].map(a=>`
+
+<label class="check">
 
 <input
 type="checkbox"
-style="width:auto;margin-right:8px">
+id="safe_${a[0]}"
+${s[a[0]]?"checked":""}>
 
-${i+1}. ${esc(x)}
+<span>${a[1]}</span>
 
 </label>
 
-`).join("");
+`).join("")}
+
+${input("safeTech","Technician name",s.tech||"")}
+
+${input("safeSupervisor","Supervisor name",s.supervisor||"")}
+
+<div class="field">
+
+<label>Safety comments</label>
+
+<textarea id="safeComments">${esc(s.comments||"")}</textarea>
+
+</div>
+
+</div>
+
+`;
+
 }
 
-/* HISTORY */
+
+function readSafety(old){
+
+const keys=[
+"ppe","loto","stored","hydraulic","pneumatic",
+"mechanical","guards","area","tools",
+"environment","electrical"
+];
+
+const s={};
+
+keys.forEach(k=>{
+s[k]=!!document.getElementById("safe_"+k)?.checked;
+});
+
+s.tech=document.getElementById("safeTech")?.value.trim()||"";
+s.supervisor=document.getElementById("safeSupervisor")?.value.trim()||"";
+s.comments=document.getElementById("safeComments")?.value||"";
+
+if(s.tech&&!old?.tech){
+
+s.signedAt=new Date().toISOString();
+
+}
+
+if(s.supervisor&&!old?.supervisor){
+
+s.supervisorSignedAt=new Date().toISOString();
+
+}
+
+return s;
+
+}
+
+
+function saveMaintenance(id){
+
+const machineEl=document.getElementById("mmachine");
+
+const machineId=machineEl?.value||"";
+
+if(!machineId){
+
+alert("Select a machine.");
+
+return;
+
+}
+
+const task=document.getElementById("mtask").value.trim();
+
+if(!task){
+
+alert("Enter a maintenance task.");
+
+return;
+
+}
+
+const old=id?
+db.maintenance.find(x=>String(x.id)===String(id)):
+null;
+
+const data={
+
+machineId,
+
+task,
+
+due:document.getElementById("mdue").value,
+
+interval:Number(document.getElementById("minterval").value||0),
+
+labour:Number(document.getElementById("mlabour").value||0),
+
+cost:Number(document.getElementById("mcost").value||0),
+
+machineHours:Number(document.getElementById("mhoursjob").value||0),
+
+parts:document.getElementById("mparts").value,
+
+notes:document.getElementById("mnotes2").value,
+
+safety:readSafety(old?.safety),
+
+done:old?.done||false,
+
+completed:old?.completed||null,
+
+created:old?.created||new Date().toISOString()
+
+};
+
+if(id){
+
+Object.assign(old,data);
+
+audit("Updated","maintenance",id);
+
+}else{
+
+const n={id:uid(),...data};
+
+db.maintenance.push(n);
+
+audit("Created","maintenance",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
+
+function completeMaintenance(id){
+
+const x=db.maintenance.find(a=>String(a.id)===String(id));
+
+if(!x)return;
+
+x.done=true;
+
+x.completed=today();
+
+audit("Completed","maintenance",id);
+
+if(Number(x.interval)>0){
+
+const d=new Date(x.due+"T00:00:00");
+
+d.setDate(d.getDate()+Number(x.interval));
+
+db.maintenance.push({
+
+...structuredClone(x),
+
+id:uid(),
+
+due:d.toISOString().slice(0,10),
+
+done:false,
+
+completed:null,
+
+created:new Date().toISOString()
+
+});
+
+audit("Created recurring maintenance","maintenance",db.maintenance.at(-1).id);
+
+}
+
+save();
+
+renderAll();
+
+}
+
+
+function renderMaintenance(){
+
+const q=(document.getElementById("maintSearch")?.value||"").toLowerCase();
+
+const arr=db.maintenance
+.filter(x=>
+(`${x.task} ${mname(x.machineId)} ${x.notes||""}`)
+.toLowerCase()
+.includes(q)
+)
+.sort((a,b)=>String(a.due).localeCompare(String(b.due)));
+
+document.getElementById("maintList").innerHTML=
+
+arr.length?
+arr.map(x=>{
+
+const overdue=!x.done&&x.due<today();
+
+return `
+
+<div class="item">
+
+<div class="row">
+
+<div>
+
+<h3>${esc(x.task)}</h3>
+
+<div class="muted">${esc(mname(x.machineId))}</div>
+
+</div>
+
+<span class="badge ${x.done?"green":overdue?"red":"blue"}">
+${x.done?"Complete":overdue?"OVERDUE":"Open"}
+</span>
+
+</div>
+
+<p>Due: <b>${fmt(x.due)}</b></p>
+
+<p class="muted">
+Labour ${x.labour||0}h • Cost ${money(x.cost)}
+</p>
+
+<div class="actions">
+
+${!x.done?
+`<button class="small success" onclick="completeMaintenance('${x.id}')">Complete</button>`
+:""}
+
+<button class="small secondary"
+onclick="openMaintenance('${x.id}')">
+Edit
+</button>
+
+<button class="small danger"
+onclick="deleteRecord('maintenance','${x.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join(""):
+`<div class="empty">No maintenance jobs.</div>`;
+
+renderCalendar();
+
+}
+
+
+function renderCalendar(){
+
+const el=document.getElementById("calendar");
+
+if(!el)return;
+
+const now=new Date();
+
+const year=now.getFullYear();
+
+const month=now.getMonth();
+
+const first=new Date(year,month,1);
+
+const days=new Date(year,month+1,0).getDate();
+
+const start=first.getDay();
+
+let html="";
+
+for(let i=0;i<start;i++){
+
+html+=`<div class="day"></div>`;
+
+}
+
+for(let d=1;d<=days;d++){
+
+const date=
+`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+const has=db.maintenance.some(x=>x.due===date);
+
+html+=`
+
+<div class="day ${has?"has":""}">
+
+<strong>${d}</strong>
+
+${has?"🔧":""}
+
+</div>
+
+`;
+
+}
+
+el.innerHTML=`
+
+<div class="muted" style="margin-bottom:6px">
+${now.toLocaleDateString("en-AU",{month:"long",year:"numeric"})}
+</div>
+
+<div class="calendar">${html}</div>
+
+`;
+
+}
+
+
+function openFault(id=null,machineId=""){
+
+const x=id?
+db.faults.find(a=>String(a.id)===String(id)):
+null;
+
+openModal(`
+
+<h2>${x?"Edit":"Record"} Fault</h2>
+
+${select(
+"fmachine",
+"Machine",
+db.machines.map(m=>m.name),
+mname(machineId||x?.machineId||"")
+)}
+
+<div class="grid">
+
+${select(
+"fpriority",
+"Priority",
+["Low","Medium","High","Critical"],
+x?.priority||"Medium"
+)}
+
+${select(
+"fstatus",
+"Status",
+["Open","Investigating","Repair","Waiting Parts","Closed"],
+x?.status||"Open"
+)}
+
+${input("fsystem","System",x?.system||"Hydraulic")}
+
+${input("fdowntime","Downtime hours",x?.downtime||0,"number")}
+
+</div>
+
+${input("fsymptom","Symptom",x?.symptom||"")}
+
+<div class="field">
+
+<label>Cause(s) investigated</label>
+
+<textarea id="fcause">${esc(x?.cause||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Measurements / test results</label>
+
+<textarea id="fmeasure">${esc(x?.measurements||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Repair / corrective action</label>
+
+<textarea id="faction">${esc(x?.action||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Parts replaced</label>
+
+<textarea id="fparts">${esc(x?.parts||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Root cause</label>
+
+<textarea id="froot">${esc(x?.root||"")}</textarea>
+
+</div>
+
+<h3>5 Whys</h3>
+
+${[1,2,3,4,5].map(n=>`
+
+<div class="field">
+
+<label>Why ${n}</label>
+
+<input id="why${n}" value="${esc(x?.whys?.[n-1]||"")}">
+
+</div>
+
+`).join("")}
+
+<h3>Safety</h3>
+
+${safetyHTML(x?.safety)}
+
+<div class="actions">
+
+<button onclick="saveFault('${id||""}')">
+Save Fault
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function saveFault(id){
+
+const machineId=document.getElementById("fmachine").value;
+
+const symptom=document.getElementById("fsymptom").value.trim();
+
+if(!machineId||!symptom){
+
+alert("Select a machine and enter the symptom.");
+
+return;
+
+}
+
+const old=id?
+db.faults.find(x=>String(x.id)===String(id)):
+null;
+
+const whys=[1,2,3,4,5].map(n=>
+document.getElementById("why"+n).value
+);
+
+const number=old?.number||
+`F-${new Date().getFullYear()}-${String(db.faults.length+1).padStart(4,"0")}`;
+
+const data={
+
+machineId,
+
+number,
+
+system:document.getElementById("fsystem").value,
+
+symptom,
+
+cause:document.getElementById("fcause").value,
+
+measurements:document.getElementById("fmeasure").value,
+
+action:document.getElementById("faction").value,
+
+parts:document.getElementById("fparts").value,
+
+root:document.getElementById("froot").value,
+
+whys,
+
+priority:document.getElementById("fpriority").value,
+
+status:document.getElementById("fstatus").value,
+
+downtime:Number(document.getElementById("fdowntime").value||0),
+
+safety:readSafety(old?.safety),
+
+created:old?.created||new Date().toISOString(),
+
+closed:old?.closed||null
+
+};
+
+if(data.status==="Closed"&&!old?.closed){
+
+data.closed=new Date().toISOString();
+
+}
+
+if(id){
+
+Object.assign(old,data);
+
+audit("Updated","fault",id);
+
+}else{
+
+const n={id:uid(),...data};
+
+db.faults.push(n);
+
+audit("Created","fault",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
+
+function faultSuggestions(x){
+
+const s=(x.symptom||"").toLowerCase();
+
+const out=[];
+
+if(/low pressure|pressure drop|no pressure/.test(s))
+out.push(
+"Check reservoir level, pump condition, suction restriction, relief setting, leakage and valve condition."
+);
+
+if(/hot|temperature|overheat/.test(s))
+out.push(
+"Check oil level, cooler condition, viscosity, case drain, excessive leakage and operating duty."
+);
+
+if(/slow|slow speed|no flow/.test(s))
+out.push(
+"Check pump displacement, RPM, flow restriction, valve spool condition and actuator leakage."
+);
+
+if(/noise|whine|cavitat/.test(s))
+out.push(
+"Check fluid level, suction restriction, air ingress, inlet hose condition and pump inlet conditions."
+);
+
+if(/vibration/.test(s))
+out.push(
+"Check alignment, bearing condition, looseness, balance and mounting."
+);
+
+if(/bearing|temperature/.test(s))
+out.push(
+"Check lubrication quantity/type, alignment, preload/clearance, contamination and load."
+);
+
+if(!out.length)
+out.push(
+"Confirm symptom, inspect visually, record measurements, check recent history and compare against manufacturer specifications."
+);
+
+return out;
+
+}
+
+
+function renderFaults(){
+
+const q=(document.getElementById("faultSearch")?.value||"").toLowerCase();
+
+const arr=db.faults.filter(x=>
+[
+x.number,
+x.symptom,
+x.system,
+x.priority,
+x.status,
+mname(x.machineId)
+].join(" ").toLowerCase().includes(q)
+);
+
+document.getElementById("faultList").innerHTML=
+
+arr.length?
+arr.map(x=>`
+
+<div class="item">
+
+<div class="row">
+
+<div>
+
+<h3>${esc(x.number)}</h3>
+
+<div class="muted">
+${esc(mname(x.machineId))}
+</div>
+
+</div>
+
+<span class="badge ${
+x.priority==="Critical"||x.status==="Open"?
+"red":
+x.status==="Closed"?
+"green":"orange"
+}">
+${esc(x.priority)} • ${esc(x.status)}
+</span>
+
+</div>
+
+<p>${esc(x.symptom)}</p>
+
+<div class="okbox">
+
+<b>Suggested checks</b>
+
+<ul>
+
+${faultSuggestions(x).map(a=>`
+<li>${esc(a)}</li>
+`).join("")}
+
+</ul>
+
+</div>
+
+<p class="muted">
+Downtime: ${x.downtime||0} h
+</p>
+
+<div class="actions">
+
+<button class="small"
+onclick="openFault('${x.id}')">
+Open
+</button>
+
+<button class="small danger"
+onclick="deleteRecord('faults','${x.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`).join(""):
+`<div class="empty">No faults recorded.</div>`;
+
+}
+
+
+function openWO(id=null,machineId=""){
+
+const x=id?
+db.workorders.find(a=>String(a.id)===String(id)):
+null;
+
+openModal(`
+
+<h2>${x?"Edit":"Create"} Work Order</h2>
+
+${select(
+"womachine",
+"Machine",
+db.machines.map(m=>m.name),
+mname(machineId||x?.machineId||"")
+)}
+
+<div class="grid">
+
+${input("wonumber","WO number",x?.number||
+`WO-${new Date().getFullYear()}-${String(db.workorders.length+1).padStart(4,"0")}`)}
+
+${select(
+"wopriority",
+"Priority",
+["Low","Medium","High","Critical"],
+x?.priority||"Medium"
+)}
+
+${select(
+"wostatus",
+"Status",
+["Open","Assigned","In Progress","Waiting Parts","Complete","Cancelled"],
+x?.status||"Open"
+)}
+
+${input("woassigned","Assigned technician",x?.assigned||"")}
+
+${input("wodue","Due date",x?.due||today(),"date")}
+
+${input("wolabour","Labour hours",x?.labour||0,"number")}
+
+${input("wotravel","Travel hours",x?.travel||0,"number")}
+
+${input("wodown","Downtime hours",x?.downtime||0,"number")}
+
+${input("wocost","Cost",x?.cost||0,"number")}
+
+</div>
+
+<div class="field">
+
+<label>Request / fault</label>
+
+<textarea id="worequest">${esc(x?.request||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Repair performed</label>
+
+<textarea id="worepair">${esc(x?.repair||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Parts used</label>
+
+<textarea id="woparts">${esc(x?.parts||"")}</textarea>
+
+</div>
+
+<div class="field">
+
+<label>Measurements</label>
+
+<textarea id="womeasure">${esc(x?.measurements||"")}</textarea>
+
+</div>
+
+<h3>Safety & Sign-off</h3>
+
+${safetyHTML(x?.safety)}
+
+<div class="actions">
+
+<button onclick="saveWO('${id||""}')">
+Save Work Order
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function saveWO(id){
+
+const machineId=document.getElementById("womachine").value;
+
+if(!machineId){
+
+alert("Select a machine.");
+
+return;
+
+}
+
+const old=id?
+db.workorders.find(x=>String(x.id)===String(id)):
+null;
+
+const data={
+
+machineId,
+
+number:document.getElementById("wonumber").value,
+
+priority:document.getElementById("wopriority").value,
+
+status:document.getElementById("wostatus").value,
+
+assigned:document.getElementById("woassigned").value,
+
+due:document.getElementById("wodue").value,
+
+labour:num("wolabour"),
+
+travel:num("wotravel"),
+
+downtime:num("wodown"),
+
+cost:num("wocost"),
+
+request:document.getElementById("worequest").value,
+
+repair:document.getElementById("worepair").value,
+
+parts:document.getElementById("woparts").value,
+
+measurements:document.getElementById("womeasure").value,
+
+safety:readSafety(old?.safety),
+
+created:old?.created||new Date().toISOString(),
+
+started:old?.started||null,
+
+completed:old?.completed||null
+
+};
+
+if(data.status==="In Progress"&&!old?.started){
+
+data.started=new Date().toISOString();
+
+}
+
+if(data.status==="Complete"&&!old?.completed){
+
+data.completed=new Date().toISOString();
+
+}
+
+if(id){
+
+Object.assign(old,data);
+
+audit("Updated","workorder",id);
+
+}else{
+
+const n={id:uid(),...data};
+
+db.workorders.push(n);
+
+audit("Created","workorder",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
+
+function renderWO(){
+
+const el=document.getElementById("woList");
+
+if(!el)return;
+
+el.innerHTML=db.workorders.length?
+
+db.workorders
+.slice()
+.sort((a,b)=>String(b.created).localeCompare(String(a.created)))
+.map(x=>`
+
+<div class="item">
+
+<div class="row">
+
+<div>
+
+<h3>${esc(x.number)}</h3>
+
+<div class="muted">${esc(mname(x.machineId))}</div>
+
+</div>
+
+<span class="badge ${
+x.status==="Complete"?"green":
+x.priority==="Critical"?"red":"orange"
+}">
+${esc(x.status)}
+</span>
+
+</div>
+
+<p>${esc(x.request||"No request recorded")}</p>
+
+<p class="muted">
+Assigned: ${esc(x.assigned||"Unassigned")}
+•
+Labour: ${x.labour||0}h
+•
+Downtime: ${x.downtime||0}h
+</p>
+
+<div class="actions">
+
+<button class="small"
+onclick="openWO('${x.id}')">
+Open
+</button>
+
+<button class="small danger"
+onclick="deleteRecord('workorders','${x.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`).join(""):
+`<div class="empty">No work orders.</div>`;
+
+}
+
+
+const inspectionChecks=[
+
+"Machine condition / housekeeping",
+"Guards secure",
+"Emergency stops / safety devices visually checked",
+"Hydraulic hoses / fittings visually checked",
+"Leaks",
+"Oil level",
+"Lubrication",
+"Fasteners / mounting",
+"Abnormal noise",
+"Abnormal vibration",
+"Temperature",
+"Labels / warnings",
+"Work area safe"
+
+];
+
+
+function openInspection(id=null,machineId=""){
+
+const x=id?
+db.inspections.find(a=>String(a.id)===String(id)):
+null;
+
+openModal(`
+
+<h2>${x?"Edit":"New"} Inspection</h2>
+
+${select(
+"imachine",
+"Machine",
+db.machines.map(m=>m.name),
+mname(machineId||x?.machineId||"")
+)}
+
+<div class="grid">
+
+${select(
+"itype",
+"Inspection type",
+[
+"Pre-start",
+"Weekly",
+"Monthly",
+"Hydraulic",
+"Mechanical",
+"Safety",
+"Guard",
+"Lubrication"
+],
+x?.type||"Pre-start"
+)}
+
+${input("iinspector","Inspector",x?.inspector||"")}
+
+</div>
+
+<h3>Checklist</h3>
+
+${inspectionChecks.map((c,i)=>`
+
+<div class="field">
+
+<label>${c}</label>
+
+<select id="ic${i}">
+
+${["Pass","Attention","Fail","N/A"].map(v=>
+`<option ${
+x?.checks?.[i]===v?"selected":""
+}>${v}</option>`
+).join("")}
+
+</select>
+
+</div>
+
+`).join("")}
+
+<div class="field">
+
+<label>Comments</label>
+
+<textarea id="icomments">${esc(x?.comments||"")}</textarea>
+
+</div>
+
+${safetyHTML(x?.safety)}
+
+<div class="actions">
+
+<button onclick="saveInspection('${id||""}')">
+Save Inspection
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function saveInspection(id){
+
+const machineId=document.getElementById("imachine").value;
+
+if(!machineId){
+
+alert("Select a machine.");
+
+return;
+
+}
+
+const old=id?
+db.inspections.find(x=>String(x.id)===String(id)):
+null;
+
+const checks=inspectionChecks.map((_,i)=>
+document.getElementById("ic"+i).value
+);
+
+const data={
+
+machineId,
+
+type:document.getElementById("itype").value,
+
+inspector:document.getElementById("iinspector").value,
+
+checks,
+
+comments:document.getElementById("icomments").value,
+
+safety:readSafety(old?.safety),
+
+created:old?.created||new Date().toISOString()
+
+};
+
+if(id){
+
+Object.assign(old,data);
+
+audit("Updated","inspection",id);
+
+}else{
+
+const n={id:uid(),...data};
+
+db.inspections.push(n);
+
+audit("Created","inspection",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
+
+function renderInspections(){
+
+const el=document.getElementById("inspectionList");
+
+if(!el)return;
+
+el.innerHTML=db.inspections.length?
+
+db.inspections
+.slice()
+.reverse()
+.map(x=>{
+
+const fail=x.checks?.filter(a=>a==="Fail").length||0;
+
+const attention=x.checks?.filter(a=>a==="Attention").length||0;
+
+return `
+
+<div class="item">
+
+<div class="row">
+
+<div>
+
+<h3>${esc(x.type)}</h3>
+
+<div class="muted">${esc(mname(x.machineId))}</div>
+
+</div>
+
+<span class="badge ${
+fail?"red":attention?"orange":"green"
+}">
+${fail?"FAIL":attention?"ATTENTION":"PASS"}
+</span>
+
+</div>
+
+<p>
+Inspector: ${esc(x.inspector||"—")}
+</p>
+
+<p class="muted">
+${fail} fail • ${attention} attention
+</p>
+
+<div class="actions">
+
+<button class="small"
+onclick="openInspection('${x.id}')">
+Open
+</button>
+
+<button class="small danger"
+onclick="deleteRecord('inspections','${x.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join(""):
+`<div class="empty">No inspections.</div>`;
+
+}
+
+
+function openPart(id=null){
+
+const x=id?
+db.parts.find(a=>String(a.id)===String(id)):
+null;
+
+openModal(`
+
+<h2>${x?"Edit":"Add"} Part</h2>
+
+<div class="grid">
+
+${input("ppart","Part number",x?.partNo||"")}
+
+${input("pdesc","Description",x?.description||"")}
+
+${input("pman","Manufacturer",x?.manufacturer||"")}
+
+${input("psupplier","Supplier",x?.supplier||"")}
+
+${input("pqty","Quantity",x?.qty||0,"number")}
+
+${input("pmin","Minimum stock",x?.min||0,"number")}
+
+${input("pcost","Unit cost",x?.cost||0,"number")}
+
+${input("ploc","Storage location",x?.location||"")}
+
+</div>
+
+${select(
+"pmachine",
+"Compatible machine",
+["General",...db.machines.map(m=>m.name)],
+x?.machineId?mname(x.machineId):"General"
+)}
+
+<div class="actions">
+
+<button onclick="savePart('${id||""}')">
+Save Part
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function savePart(id){
+
+const old=id?
+db.parts.find(x=>String(x.id)===String(id)):
+null;
+
+const machineName=document.getElementById("pmachine").value;
+
+const m=db.machines.find(x=>x.name===machineName);
+
+const data={
+
+partNo:document.getElementById("ppart").value,
+
+description:document.getElementById("pdesc").value,
+
+manufacturer:document.getElementById("pman").value,
+
+supplier:document.getElementById("psupplier").value,
+
+qty:num("pqty"),
+
+min:num("pmin"),
+
+cost:num("pcost"),
+
+location:document.getElementById("ploc").value,
+
+machineId:m?.id||""
+
+};
+
+if(id){
+
+Object.assign(old,data);
+
+audit("Updated","part",id);
+
+}else{
+
+const n={id:uid(),...data};
+
+db.parts.push(n);
+
+audit("Created","part",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
+
+function renderParts(){
+
+const el=document.getElementById("partsList");
+
+if(!el)return;
+
+el.innerHTML=db.parts.length?
+
+db.parts.map(x=>`
+
+<div class="item">
+
+<div class="row">
+
+<div>
+
+<h3>${esc(x.partNo)}</h3>
+
+<div>${esc(x.description)}</div>
+
+</div>
+
+<span class="badge ${
+Number(x.qty)<=Number(x.min)?"red":"green"
+}">
+${x.qty} in stock
+</span>
+
+</div>
+
+<p class="muted">
+${esc(x.manufacturer||"")}
+•
+Supplier: ${esc(x.supplier||"")}
+</p>
+
+<p>
+Cost: ${money(x.cost)}
+•
+Location: ${esc(x.location||"—")}
+</p>
+
+<div class="actions">
+
+<button class="small secondary"
+onclick="openPart('${x.id}')">
+Edit
+</button>
+
+<button class="small danger"
+onclick="deleteRecord('parts','${x.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`).join(""):
+`<div class="empty">No parts in inventory.</div>`;
+
+}
+
+
+function openShutdown(id=null){
+
+const x=id?
+db.shutdowns.find(a=>String(a.id)===String(id)):
+null;
+
+openModal(`
+
+<h2>${x?"Edit":"Plan"} Shutdown</h2>
+
+<div class="field">
+
+<label>Shutdown name</label>
+
+<input id="sdname" value="${esc(x?.name||"")}">
+
+</div>
+
+<div class="grid">
+
+${input("sdstart","Start",x?.start||today(),"date")}
+
+${input("sdend","End",x?.end||today(),"date")}
+
+</div>
+
+<div class="field">
+
+<label>Machines</label>
+
+<select id="sdmachines" multiple style="min-height:120px">
+
+${db.machines.map(m=>`
+
+<option value="${m.id}"
+${x?.machines?.includes(m.id)?"selected":""}>
+${esc(m.name)}
+</option>
+
+`).join("")}
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Tasks / work orders / parts</label>
+
+<textarea id="sdnotes">${esc(x?.notes||"")}</textarea>
+
+</div>
+
+<div class="actions">
+
+<button onclick="saveShutdown('${id||""}')">
+Save Shutdown
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function saveShutdown(id){
+
+const old=id?
+db.shutdowns.find(x=>String(x.id)===String(id)):
+null;
+
+const machines=[
+...document.getElementById("sdmachines").selectedOptions
+].map(o=>o.value);
+
+const data={
+
+name:document.getElementById("sdname").value,
+
+start:document.getElementById("sdstart").value,
+
+end:document.getElementById("sdend").value,
+
+machines,
+
+notes:document.getElementById("sdnotes").value,
+
+created:old?.created||new Date().toISOString()
+
+};
+
+if(id){
+
+Object.assign(old,data);
+
+audit("Updated","shutdown",id);
+
+}else{
+
+const n={id:uid(),...data};
+
+db.shutdowns.push(n);
+
+audit("Created","shutdown",n.id);
+
+}
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
+
+function renderShutdowns(){
+
+const el=document.getElementById("shutdownList");
+
+if(!el)return;
+
+el.innerHTML=db.shutdowns.length?
+
+db.shutdowns.map(x=>`
+
+<div class="item">
+
+<h3>${esc(x.name)}</h3>
+
+<p>
+${fmt(x.start)} → ${fmt(x.end)}
+</p>
+
+<p class="muted">
+
+${x.machines?.map(mname).join(", ")||"No machines"}
+
+</p>
+
+<p>${esc(x.notes||"")}</p>
+
+<div class="actions">
+
+<button class="small secondary"
+onclick="openShutdown('${x.id}')">
+Edit
+</button>
+
+<button class="small danger"
+onclick="deleteRecord('shutdowns','${x.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`).join(""):
+`<div class="empty">No planned shutdowns.</div>`;
+
+}
+
+
+function renderHome(){
+
+const overdue=db.maintenance.filter(x=>!x.done&&x.due<today()).length;
+
+const openFaults=db.faults.filter(x=>x.status!=="Closed").length;
+
+const openWO=db.workorders.filter(x=>x.status!=="Complete").length;
+
+const due=db.maintenance.filter(x=>!x.done).length;
+
+const critical=db.faults.filter(x=>
+x.priority==="Critical"&&x.status!=="Closed"
+).length;
+
+document.getElementById("stats").innerHTML=`
+
+<div class="stat">
+<b>${db.machines.length}</b>
+<span class="muted">Machines</span>
+</div>
+
+<div class="stat">
+<b>${due}</b>
+<span class="muted">Open maintenance</span>
+</div>
+
+<div class="stat">
+<b>${openFaults}</b>
+<span class="muted">Open faults</span>
+</div>
+
+<div class="stat">
+<b>${openWO}</b>
+<span class="muted">Open work orders</span>
+</div>
+
+`;
+
+let alerts="";
+
+if(overdue)
+alerts+=`
+<div class="dangerbox">
+⚠️ <b>${overdue}</b> overdue maintenance job(s).
+</div>
+`;
+
+if(critical)
+alerts+=`
+<div class="dangerbox" style="margin-top:10px">
+🚨 <b>${critical}</b> critical fault(s) open.
+</div>
+`;
+
+document.getElementById("alerts").innerHTML=alerts;
+
+const up=db.maintenance
+.filter(x=>!x.done)
+.sort((a,b)=>String(a.due).localeCompare(String(b.due)))
+.slice(0,5);
+
+document.getElementById("upcoming").innerHTML=
+
+up.length?
+up.map(x=>`
+
+<div class="item">
+
+<div class="row">
+
+<div>
+
+<b>${esc(x.task)}</b>
+
+<div class="muted">${esc(mname(x.machineId))}</div>
+
+</div>
+
+<span class="badge ${x.due<today()?"red":"blue"}">
+${fmt(x.due)}
+</span>
+
+</div>
+
+</div>
+
+`).join(""):
+`<div class="empty">No upcoming maintenance.</div>`;
+
+const recent=db.history.slice(0,6);
+
+document.getElementById("recent").innerHTML=
+
+recent.length?
+recent.map(x=>`
+
+<div class="item">
+
+<b>${esc(x.action)}</b>
+
+<span class="muted">
+${esc(x.type)}
+•
+${new Date(x.time).toLocaleString("en-AU")}
+</span>
+
+</div>
+
+`).join(""):
+`<div class="empty">No activity yet.</div>`;
+
+}
+
+
+function renderAnalytics(){
+
+const totalCost=
+db.maintenance.reduce((a,x)=>a+Number(x.cost||0),0)+
+db.workorders.reduce((a,x)=>a+Number(x.cost||0),0);
+
+const downtime=
+db.faults.reduce((a,x)=>a+Number(x.downtime||0),0)+
+db.workorders.reduce((a,x)=>a+Number(x.downtime||0),0);
+
+const labour=
+db.maintenance.reduce((a,x)=>a+Number(x.labour||0),0)+
+db.workorders.reduce((a,x)=>a+Number(x.labour||0),0);
+
+const completedWO=
+db.workorders.filter(x=>x.status==="Complete");
+
+const mttr=completedWO.length?
+labour/completedWO.length:0;
+
+const failureMachines={};
+
+db.faults.forEach(f=>{
+
+failureMachines[f.machineId]=
+(failureMachines[f.machineId]||0)+1;
+
+});
+
+const repeat=
+Object.entries(failureMachines)
+.filter(([_,n])=>n>1);
+
+document.getElementById("analyticsContent").innerHTML=`
+
+<div class="grid">
+
+<div class="stat">
+<b>${money(totalCost)}</b>
+<span class="muted">Maintenance cost</span>
+</div>
+
+<div class="stat">
+<b>${labour.toFixed(1)}h</b>
+<span class="muted">Labour</span>
+</div>
+
+<div class="stat">
+<b>${downtime.toFixed(1)}h</b>
+<span class="muted">Downtime</span>
+</div>
+
+<div class="stat">
+<b>${mttr.toFixed(1)}h</b>
+<span class="muted">Avg job labour</span>
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Reliability</h3>
+
+<p>
+Faults recorded:
+<b>${db.faults.length}</b>
+</p>
+
+<p>
+Repeat-fault machines:
+<b>${repeat.length}</b>
+</p>
+
+<p>
+Completed work orders:
+<b>${completedWO.length}</b>
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Repeat faults</h3>
+
+${
+repeat.length?
+repeat.map(([id,n])=>`
+
+<div class="item">
+
+<b>${esc(mname(id))}</b>
+
+<p>
+${n} recorded faults.
+</p>
+
+</div>
+
+`).join(""):
+`<p class="muted">No repeat faults detected.</p>`
+}
+
+</div>
+
+<div class="card">
+
+<h3>Low-stock parts</h3>
+
+${
+db.parts.filter(x=>Number(x.qty)<=Number(x.min)).length?
+db.parts.filter(x=>Number(x.qty)<=Number(x.min))
+.map(x=>`
+<p>⚠️ <b>${esc(x.partNo)}</b> — ${x.qty} remaining</p>
+`).join(""):
+`<p class="muted">No low-stock parts.</p>`
+}
+
+</div>
+
+`;
+
+}
+
+
+const guides=[
+
+{
+title:"Hydraulic low pressure",
+system:"Hydraulic",
+text:"Check fluid level, suction restriction, pump condition, relief setting, valve leakage and actuator leakage. Record actual pressure and flow where appropriate."
+},
+
+{
+title:"Hydraulic overheating",
+system:"Hydraulic",
+text:"Check oil level, cooler condition, viscosity, excessive leakage, relief valve operation, case drain and duty cycle."
+},
+
+{
+title:"Hydraulic slow actuator",
+system:"Hydraulic",
+text:"Check available flow, pump displacement, engine/motor speed, restrictions, valve condition and cylinder/motor leakage."
+},
+
+{
+title:"Hydraulic noise / cavitation",
+system:"Hydraulic",
+text:"Check reservoir level, suction hose, inlet restriction, air ingress, fluid condition and pump inlet conditions."
+},
+
+{
+title:"Bearing overheating",
+system:"Mechanical",
+text:"Check lubrication quantity/type, contamination, alignment, preload/clearance, load, speed and bearing condition."
+},
+
+{
+title:"Shaft vibration",
+system:"Mechanical",
+text:"Check alignment, balance, coupling condition, bearings, looseness, mounting and shaft runout."
+},
+
+{
+title:"Pneumatic pressure loss",
+system:"Pneumatic",
+text:"Check compressor supply, regulator, filters, hoses, fittings, valves and actuator leakage."
+},
+
+{
+title:"Lubrication failure",
+system:"Lubrication",
+text:"Confirm lubricant type, quantity, contamination, interval, temperature and application method."
+},
+
+{
+title:"General fault finding",
+system:"General",
+text:"Confirm the symptom, inspect safely, check machine history, record measurements, isolate possible causes and verify the repair."
+}
+
+];
+
+
+function renderKnowledge(){
+
+const q=(document.getElementById("guideSearch")?.value||"").toLowerCase();
+
+const arr=guides.filter(x=>
+(`${x.title} ${x.system} ${x.text}`)
+.toLowerCase().includes(q)
+);
+
+document.getElementById("guideList").innerHTML=
+
+arr.map(x=>`
+
+<div class="item">
+
+<h3>${esc(x.title)}</h3>
+
+<span class="badge blue">
+${esc(x.system)}
+</span>
+
+<p>${esc(x.text)}</p>
+
+</div>
+
+`).join("");
+
+}
+
 
 function renderHistory(){
 
-const list=document.getElementById("historyList");
+const q=(document.getElementById("historySearch")?.value||"").toLowerCase();
 
-if(!data.history.length){
-list.innerHTML='<div class="empty">No history yet.</div>';
-return;
-}
+const arr=db.history.filter(x=>
+(`${x.action} ${x.type} ${x.extra}`)
+.toLowerCase().includes(q)
+);
 
-list.innerHTML=data.history.map(h=>`
+document.getElementById("historyList").innerHTML=
+
+arr.length?
+
+arr.map(x=>`
 
 <div class="item">
 
-<span class="badge orange">
-${esc(h.type)}
-</span>
+<b>${esc(x.action)}</b>
 
-<p>${esc(h.text)}</p>
-
-<p class="small">${esc(h.date)}</p>
+<p class="muted">
+${esc(x.type)}
+•
+${new Date(x.time).toLocaleString("en-AU")}
+</p>
 
 </div>
 
-`).join("");
+`).join(""):
+`<div class="empty">No history.</div>`;
+
 }
 
-/* DASHBOARD */
 
-function renderDashboard(){
+function renderEngineering(){
 
-const openFaults=data.faults.filter(
-f=>f.status!=="Closed"
-).length;
+document.getElementById("engineeringContent").innerHTML=`
 
-const openMaintenance=data.maintenance.filter(
-x=>!x.done
-).length;
+<div class="card">
 
-const completed=data.maintenance.filter(
-x=>x.done
-).length;
+<h3>Hydraulics</h3>
 
-document.getElementById("statMachines").textContent=
-data.machines.length;
+<select id="hydCalc" onchange="renderHydCalc()">
 
-document.getElementById("statFaults").textContent=
-openFaults;
+<option value="flow">Pump theoretical flow</option>
+<option value="force">Cylinder force</option>
+<option value="speed">Cylinder speed</option>
+<option value="power">Hydraulic power</option>
+<option value="pressure">Pressure conversion</option>
+<option value="motor">Motor/pump estimate</option>
 
-document.getElementById("statDue").textContent=
-openMaintenance;
+</select>
 
-document.getElementById("statCompleted").textContent=
-completed;
+<div id="hydInputs"></div>
 
-const recent=document.getElementById("recentActivity");
+<div id="hydResult"></div>
 
-if(!data.history.length){
-recent.innerHTML='<div class="empty">No activity yet.</div>';
-return;
-}
-
-recent.innerHTML=data.history.slice(0,5).map(h=>`
-
-<div class="item">
-<strong>${esc(h.type)}</strong>
-<p>${esc(h.text)}</p>
-<span class="small">${esc(h.date)}</span>
 </div>
 
-`).join("");
-}
 
-/* PDF REPORT */
+<div class="card">
 
-function buildPDFReport(){
+<h3>Mechanical</h3>
 
-const report=document.getElementById("printReport");
+<select id="mechCalc" onchange="renderMechCalc()">
 
-const date=new Date().toLocaleString("en-AU");
+<option value="torque">Torque from power/RPM</option>
+<option value="power">Power from torque/RPM</option>
+<option value="rpm">RPM from linear speed</option>
+<option value="belt">Belt speed</option>
+<option value="gear">Gear ratio</option>
+<option value="shaft">Shaft torsional stress</option>
 
-let html=`
+</select>
 
-<h1>🔧 MachineMate</h1>
+<div id="mechInputs"></div>
 
-<p><strong>Machine Service & Maintenance Report</strong></p>
+<div id="mechResult"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Unit Conversions</h3>
+
+<select id="conv" onchange="calcConv()">
+
+<option>bar → psi</option>
+<option>psi → bar</option>
+<option>L/min → L/s</option>
+<option>L/s → L/min</option>
+<option>kW → hp</option>
+<option>hp → kW</option>
+<option>Nm → lb-ft</option>
+<option>lb-ft → Nm</option>
+<option>mm → inch</option>
+<option>inch → mm</option>
+<option>°C → °F</option>
+<option>°F → °C</option>
+<option>L → US gallon</option>
+<option>US gallon → L</option>
+
+</select>
+
+${input("convVal","Value",1,"number")}
+
+<div class="calc-result" id="convResult"></div>
+
+</div>
+
+<div class="dangerbox">
+
+<b>Engineering safety note</b>
 
 <p>
-<strong>Report Date:</strong> ${esc(date)}
+These calculations are estimates only.
+They must not replace manufacturer specifications,
+engineering standards, certified design calculations,
+load ratings, pressure ratings or competent engineering review.
 </p>
-
-<div class="report-section">
-
-<h2>Machine Register</h2>
-
-`;
-
-if(!data.machines.length){
-
-html+=`<p>No machines recorded.</p>`;
-
-}else{
-
-html+=`
-
-<table>
-
-<tr>
-<th>Machine</th>
-<th>Asset / ID</th>
-<th>Model</th>
-<th>Location</th>
-<th>Serial</th>
-</tr>
-
-`;
-
-data.machines.forEach(m=>{
-
-html+=`
-
-<tr>
-
-<td>${esc(m.name)}</td>
-<td>${esc(m.asset||"-")}</td>
-<td>${esc(m.model||"-")}</td>
-<td>${esc(m.location||"-")}</td>
-<td>${esc(m.serial||"-")}</td>
-
-</tr>
-
-`;
-
-});
-
-html+=`</table>`;
-}
-
-html+=`</div>`;
-
-html+=`
-
-<div class="report-section">
-
-<h2>Maintenance Records</h2>
-`;
-
-if(!data.maintenance.length){
-
-html+=`<p>No maintenance records recorded.</p>`;
-
-}else{
-
-html+=`
-
-<table>
-
-<tr>
-<th>Machine</th>
-<th>Task</th>
-<th>Due</th>
-<th>Status</th>
-<th>Completed</th>
-</tr>
-
-`;
-
-data.maintenance.forEach(m=>{
-
-html+=`
-
-<tr>
-
-<td>${esc(machineName(m.machineId))}</td>
-<td>${esc(m.task)}</td>
-<td>${esc(m.due||"-")}</td>
-<td>${m.done?"Completed":"Open"}</td>
-<td>${esc(m.completed||"-")}</td>
-
-</tr>
-
-`;
-
-});
-
-html+=`</table>`;
-}
-
-html+=`</div>`;
-
-html+=`
-
-<div class="report-section">
-
-<h2>Fault Register</h2>
-`;
-
-if(!data.faults.length){
-
-html+=`<p>No faults recorded.</p>`;
-
-}else{
-
-html+=`
-
-<table>
-
-<tr>
-<th>Machine</th>
-<th>System</th>
-<th>Symptom</th>
-<th>Priority</th>
-<th>Status</th>
-<th>Corrective Action</th>
-</tr>
-
-`;
-
-data.faults.forEach(f=>{
-
-html+=`
-
-<tr>
-
-<td>${esc(machineName(f.machineId))}</td>
-<td>${esc(f.system)}</td>
-<td>${esc(f.symptom)}</td>
-<td>${esc(f.priority)}</td>
-<td>${esc(f.status)}</td>
-<td>${esc(f.action||"-")}</td>
-
-</tr>
-
-`;
-
-});
-
-html+=`</table>`;
-}
-
-html+=`</div>`;
-
-html+=`
-
-<div class="report-section">
-
-<h2>Machine History</h2>
-`;
-
-if(!data.history.length){
-
-html+=`<p>No history recorded.</p>`;
-
-}else{
-
-html+=`
-
-<table>
-
-<tr>
-<th>Date</th>
-<th>Event</th>
-<th>Details</th>
-</tr>
-
-`;
-
-data.history.forEach(h=>{
-
-html+=`
-
-<tr>
-
-<td>${esc(h.date)}</td>
-<td>${esc(h.type)}</td>
-<td>${esc(h.text)}</td>
-
-</tr>
-
-`;
-
-});
-
-html+=`</table>`;
-}
-
-html+=`</div>`;
-
-html+=`
-
-<div class="report-warning">
-
-<strong>⚠️ SAFETY / DISCLAIMER</strong><br><br>
-
-MachineMate troubleshooting information is provided as general
-guidance only. It does not replace workplace procedures, risk
-assessments, manufacturer's instructions, isolation/LOTO requirements,
-permits, training, supervision or the judgement of a competent person.
-
-Do not perform work outside your qualifications, training or
-authorisation.
-
-Electrical testing, electrical isolation, wiring, controls and
-electrical repairs must be performed by a suitably qualified electrician.
 
 </div>
 
-<p style="margin-top:25px;font-size:10px">
-Generated by MachineMate
-</p>
 `;
 
-report.innerHTML=html;
+renderHydCalc();
+renderMechCalc();
+renderConv();
+
 }
 
-function exportPDF(){
 
-if(!data.machines.length&&
-!data.maintenance.length&&
-!data.faults.length){
+function renderHydCalc(){
 
-alert("There is no MachineMate data to put into a report yet.");
+const c=document.getElementById("hydCalc")?.value;
+
+if(!c)return;
+
+let h="";
+
+if(c==="flow")
+h=
+input("hd","Pump displacement",50,"cc/rev")+
+input("hr","Pump speed",1450,"RPM");
+
+if(c==="force")
+h=
+input("hp","Pressure",120,"bar")+
+input("ha","Cylinder bore",100,"mm")+
+input("hr2","Rod diameter",50,"mm");
+
+if(c==="speed")
+h=
+input("hf","Flow",100,"L/min")+
+input("hb","Cylinder bore",100,"mm")+
+input("hc","Rod diameter",50,"mm");
+
+if(c==="power")
+h=
+input("hflow","Flow",100,"L/min")+
+input("hpress","Pressure",120,"bar")+
+input("heff","Efficiency",85,"%");
+
+if(c==="pressure")
+h=
+input("hpsi","Pressure",1740,"psi");
+
+if(c==="motor")
+h=
+input("mkw","Motor power",10,"kW")+
+input("mbar","Pressure",100,"bar")+
+input("meff","Overall efficiency",85,"%");
+
+document.getElementById("hydInputs").innerHTML=
+`<div class="grid">${h}</div>
+<button onclick="calcHyd()">Calculate</button>`;
+
+document.getElementById("hydResult").innerHTML="";
+
+}
+
+
+function calcHyd(){
+
+const c=document.getElementById("hydCalc").value;
+
+let r="",f="";
+
+if(c==="flow"){
+
+const q=num("hd")*num("hr")/1000;
+
+r=`${q.toFixed(2)} L/min`;
+
+f="Q = displacement × RPM ÷ 1000";
+
+}
+
+if(c==="force"){
+
+const A=Math.PI/4*(num("ha")/1000)**2;
+
+const Ar=Math.PI/4*(num("hr2")/1000)**2;
+
+const Fext=num("hp")*100000*A;
+
+const Fret=num("hp")*100000*(A-Ar);
+
+r=
+`Extend ${Fext.toFixed(0)} N • Retract ${Fret.toFixed(0)} N`;
+
+f="F = pressure × effective piston area";
+
+}
+
+if(c==="speed"){
+
+const A=Math.PI/4*(num("hb")/1000)**2;
+
+const Ar=Math.PI/4*
+((num("hb")/1000)**2-
+(num("hc")/1000)**2);
+
+r=
+`Extend ${(num("hf")/60000/A).toFixed(3)} m/s • Retract ${(num("hf")/60000/Ar).toFixed(3)} m/s`;
+
+f="v = Q ÷ A";
+
+}
+
+if(c==="power"){
+
+const p=num("hflow")*num("hpress")/600;
+
+const eff=num("heff")/100;
+
+r=`${(p*eff).toFixed(2)} kW estimated`;
+
+f="Hydraulic power ≈ Q(L/min) × p(bar) ÷ 600 × efficiency";
+
+}
+
+if(c==="pressure"){
+
+r=`${(num("hpsi")/14.5038).toFixed(2)} bar`;
+
+f="bar = psi ÷ 14.5038";
+
+}
+
+if(c==="motor"){
+
+const q=
+(num("mkw")*600*num("meff")/100)/
+num("mbar");
+
+r=`${q.toFixed(2)} L/min estimated available flow`;
+
+f="Q ≈ kW × 600 × efficiency ÷ bar";
+
+}
+
+document.getElementById("hydResult").innerHTML=
+`<div class="calc-result">${r}</div>
+<p class="muted">Formula: ${f}</p>`;
+
+}
+
+
+function renderMechCalc(){
+
+const c=document.getElementById("mechCalc")?.value;
+
+if(!c)return;
+
+let h="";
+
+if(c==="torque")
+h=
+input("mpow","Power",10,"kW")+
+input("mrpm","RPM",1500,"RPM");
+
+if(c==="power")
+h=
+input("mtor","Torque",100,"Nm")+
+input("mprpm","RPM",1500,"RPM");
+
+if(c==="rpm")
+h=
+input("mspeed","Linear speed",10,"m/s")+
+input("mdiam","Diameter",100,"mm");
+
+if(c==="belt")
+h=
+input("bspeed","RPM",1500,"RPM")+
+input("bdiam","Pulley diameter",100,"mm");
+
+if(c==="gear")
+h=
+input("gdrive","Drive gear teeth",20)+
+input("gdriven","Driven gear teeth",60)+
+input("gin","Input RPM",1500,"RPM");
+
+if(c==="shaft")
+h=
+input("stq","Torque",1000,"Nm")+
+input("sd","Shaft diameter",50,"mm");
+
+document.getElementById("mechInputs").innerHTML=
+`<div class="grid">${h}</div>
+<button onclick="calcMech()">Calculate</button>`;
+
+document.getElementById("mechResult").innerHTML="";
+
+}
+
+
+function calcMech(){
+
+const c=document.getElementById("mechCalc").value;
+
+let r="",f="";
+
+if(c==="torque"){
+
+r=
+`${(9550*num("mpow")/num("mrpm")).toFixed(2)} Nm`;
+
+f="T(Nm) = 9550 × P(kW) ÷ RPM";
+
+}
+
+if(c==="power"){
+
+r=
+`${(num("mtor")*num("mprpm")/9550).toFixed(2)} kW`;
+
+f="P(kW) = T(Nm) × RPM ÷ 9550";
+
+}
+
+if(c==="rpm"){
+
+r=
+`${(num("mspeed")*60/(Math.PI*(num("mdiam")/1000))).toFixed(1)} RPM`;
+
+f="RPM = speed × 60 ÷ circumference";
+
+}
+
+if(c==="belt"){
+
+r=
+`${(Math.PI*(num("bdiam")/1000)*num("bspeed")/60).toFixed(2)} m/s`;
+
+f="Belt speed = πD × RPM ÷ 60";
+
+}
+
+if(c==="gear"){
+
+const ratio=num("gdriven")/num("gdrive");
+
+r=
+`Ratio ${ratio.toFixed(3)}:1 • Output ${(num("gin")/ratio).toFixed(1)} RPM`;
+
+f="Ratio = driven teeth ÷ drive teeth";
+
+}
+
+if(c==="shaft"){
+
+const d=num("sd")/1000;
+
+const J=Math.PI*d**4/32;
+
+const tau=
+num("stq")*(d/2)/J/1e6;
+
+r=
+`Approx. torsional shear stress ${tau.toFixed(1)} MPa`;
+
+f=
+"τ = T·r/J (solid circular shaft) — engineering check only";
+
+}
+
+document.getElementById("mechResult").innerHTML=
+`<div class="calc-result">${r}</div>
+<p class="muted">Formula: ${f}</p>`;
+
+}
+
+
+function renderConv(){
+
+document.getElementById("convVal").value=
+document.getElementById("convVal").value||1;
+
+calcConv();
+
+}
+
+
+function calcConv(){
+
+const v=num("convVal");
+
+const c=document.getElementById("conv").value;
+
+const map={
+
+"bar → psi":v*14.5038,
+
+"psi → bar":v/14.5038,
+
+"L/min → L/s":v/60,
+
+"L/s → L/min":v*60,
+
+"kW → hp":v*1.34102209,
+
+"hp → kW":v/1.34102209,
+
+"Nm → lb-ft":v*0.737562,
+
+"lb-ft → Nm":v/0.737562,
+
+"mm → inch":v/25.4,
+
+"inch → mm":v*25.4,
+
+"°C → °F":v*9/5+32,
+
+"°F → °C":(v-32)*5/9,
+
+"L → US gallon":v*0.264172,
+
+"US gallon → L":v/0.264172
+
+};
+
+document.getElementById("convResult").textContent=
+map[c].toFixed(4);
+
+}
+
+
+function showQR(id){
+
+const m=machine(id);
+
+if(!m)return;
+
+openModal(`
+
+<h2>Machine QR Code</h2>
+
+<div class="card" style="text-align:center">
+
+<div id="qrcode"></div>
+
+<p>
+Scan this QR code to open this machine.
+</p>
+
+<p class="muted">
+${esc(m.name)} • ${esc(m.asset||"")}
+</p>
+
+</div>
+
+`);
+
+setTimeout(()=>{
+
+if(window.QRCode){
+
+new QRCode(
+document.getElementById("qrcode"),
+{
+text:
+location.origin+
+location.pathname+
+"?machine="+encodeURIComponent(m.id),
+width:220,
+height:220
+}
+);
+
+}else{
+
+document.getElementById("qrcode").innerHTML=
+`<p>QR library unavailable.</p>`;
+
+}
+
+},100);
+
+}
+
+
+function scanBarcode(){
+
+if(!("BarcodeDetector" in window)){
+
+alert(
+"Barcode scanning is not supported by this browser. Use the machine asset/serial fields instead."
+);
+
 return;
+
 }
 
-buildPDFReport();
+alert(
+"BarcodeDetector is available. A camera scanner can be added as a separate screen; this version keeps scanning optional so the app works reliably on iPhone."
+);
 
-window.print();
 }
 
-/* DATA BACKUP */
+
+function quickAdd(){
+
+openModal(`
+
+<h2>Quick Add</h2>
+
+<div class="grid">
+
+<button onclick="closeModal();openMachine()">
+🏭 Machine
+</button>
+
+<button onclick="closeModal();openMaintenance()">
+🔧 Maintenance
+</button>
+
+<button onclick="closeModal();openFault()">
+⚠️ Fault
+</button>
+
+<button onclick="closeModal();openWO()">
+🧰 Work Order
+</button>
+
+<button onclick="closeModal();openInspection()">
+✅ Inspection
+</button>
+
+<button onclick="closeModal();openPart()">
+📦 Part
+</button>
+
+</div>
+
+`);
+
+}
+
+
+function deleteRecord(collection,id){
+
+if(!confirm("Delete this record?"))return;
+
+db[collection]=db[collection].filter(
+x=>String(x.id)!==String(id)
+);
+
+audit("Deleted",collection,id);
+
+save();
+
+closeModal();
+
+renderAll();
+
+}
+
 
 function exportData(){
 
 const blob=new Blob(
-[JSON.stringify(data,null,2)],
+[JSON.stringify(db,null,2)],
 {type:"application/json"}
 );
 
-const url=URL.createObjectURL(blob);
-
 const a=document.createElement("a");
 
-a.href=url;
+a.href=URL.createObjectURL(blob);
 
 a.download=
-"MachineMate-Backup-"+
-new Date().toISOString().slice(0,10)+
-".json";
-
-document.body.appendChild(a);
+"machinemate-backup-"+today()+".json";
 
 a.click();
 
-a.remove();
+URL.revokeObjectURL(a.href);
 
-setTimeout(()=>{
-URL.revokeObjectURL(url);
-},1000);
 }
 
-function importData(){
 
-const input=document.getElementById("importFile");
+function importData(e){
 
-if(!input.files.length){
+const file=e.target.files[0];
 
-alert("Choose a MachineMate backup first.");
+if(!file)return;
 
-return;
-}
+const r=new FileReader();
 
-const reader=new FileReader();
-
-reader.onload=function(e){
+r.onload=()=>{
 
 try{
 
-const imported=JSON.parse(e.target.result);
+const x=JSON.parse(r.result);
 
-if(!imported.machines||
-!imported.maintenance||
-!imported.faults){
+if(!x||!Array.isArray(x.machines))
+throw Error();
 
-throw new Error("Invalid backup");
+db={
+...structuredClone(empty),
+...x,
+settings:{
+...empty.settings,
+...(x.settings||{})
 }
+};
 
-if(!confirm(
-"Restore this backup? Existing MachineMate data will be replaced."
-))return;
+save();
 
-data=imported;
+renderAll();
 
-if(!data.history)data.history=[];
-
-saveData();
-
-alert("Backup restored successfully.");
+alert("Backup restored.");
 
 }catch(err){
 
 alert(
-"This does not appear to be a valid MachineMate backup."
+"That file is not a valid MachineMate backup."
 );
 
 }
 
 };
 
-reader.readAsText(input.files[0]);
+r.readAsText(file);
+
 }
 
-function clearAllData(){
+
+function clearData(){
 
 if(!confirm(
-"Delete ALL MachineMate data from this device?"
-))return;
-
-if(!confirm(
-"This cannot be undone. Continue?"
+"This will permanently remove local MachineMate data. Export a backup first. Continue?"
 ))return;
 
 localStorage.removeItem(STORAGE_KEY);
 
-data={
-machines:[],
-maintenance:[],
-faults:[],
-history:[]
-};
+db=structuredClone(empty);
 
-refresh();
+renderAll();
 
-alert("All MachineMate data has been deleted.");
 }
 
-/* REFRESH */
 
-function refresh(){
+function printReport(){
 
-renderDashboard();
+const html=reportHTML();
+
+const w=window.open("","_blank");
+
+if(!w){
+
+alert("Allow pop-ups to print the report.");
+
+return;
+
+}
+
+w.document.write(`
+<html>
+<head>
+<title>MachineMate Report</title>
+<style>
+body{font-family:Arial;padding:25px}
+h1,h2{margin-bottom:5px}
+.box{border:1px solid #ccc;padding:10px;margin:10px 0}
+.small{font-size:12px;color:#555}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #ccc;padding:6px;text-align:left}
+</style>
+</head>
+<body>
+${html}
+</body>
+</html>
+`);
+
+w.document.close();
+
+w.focus();
+
+setTimeout(()=>w.print(),400);
+
+}
+
+
+function reportHTML(){
+
+return `
+
+<h1>MachineMate Maintenance Report</h1>
+
+<p>
+Generated ${new Date().toLocaleString("en-AU")}
+</p>
+
+<h2>Machines</h2>
+
+<table>
+
+<tr>
+<th>Machine</th>
+<th>Asset</th>
+<th>Model</th>
+<th>Status</th>
+<th>Hours</th>
+</tr>
+
+${db.machines.map(m=>`
+
+<tr>
+
+<td>${esc(m.name)}</td>
+
+<td>${esc(m.asset)}</td>
+
+<td>${esc(m.model)}</td>
+
+<td>${esc(m.status)}</td>
+
+<td>${m.hours||0}</td>
+
+</tr>
+
+`).join("")}
+
+</table>
+
+
+<h2>Maintenance</h2>
+
+${db.maintenance.map(x=>`
+
+<div class="box">
+
+<b>${esc(x.task)}</b>
+—
+${esc(mname(x.machineId))}
+
+<br>
+
+Due ${fmt(x.due)}
+•
+${x.done?"Completed":"Open"}
+•
+Labour ${x.labour||0}h
+•
+Cost ${money(x.cost)}
+
+<br>
+
+${esc(x.notes||"")}
+
+<p class="small">
+
+Safety:
+${esc(x.safety?.tech||"")}
+signed
+${x.safety?.signedAt?
+new Date(x.safety.signedAt).toLocaleString("en-AU"):""};
+
+Supervisor:
+${esc(x.safety?.supervisor||"")}
+
+</p>
+
+</div>
+
+`).join("")}
+
+
+<h2>Faults</h2>
+
+${db.faults.map(x=>`
+
+<div class="box">
+
+<b>${esc(x.number)}</b>
+—
+${esc(mname(x.machineId))}
+—
+${esc(x.priority)}
+—
+${esc(x.status)}
+
+<br>
+
+${esc(x.symptom)}
+
+<br>
+
+Root cause:
+${esc(x.root||"Not recorded")}
+
+<br>
+
+Action:
+${esc(x.action||"Not recorded")}
+
+<p class="small">
+
+Safety:
+${esc(x.safety?.tech||"")}
+/
+Supervisor
+${esc(x.safety?.supervisor||"")}
+
+</p>
+
+</div>
+
+`).join("")}
+
+
+<h2>Safety statement</h2>
+
+<p>
+
+Electrical testing, isolation, wiring, controls and
+electrical repairs must be performed by a suitably
+qualified electrician.
+
+Engineering calculations in MachineMate are estimates
+and must be verified against manufacturer specifications,
+applicable standards and competent engineering review
+before use for design or safety-critical decisions.
+
+</p>
+
+`;
+
+}
+
+
+function printMachine(id){
+
+const m=machine(id);
+
+if(!m)return;
+
+const jobs=db.maintenance.filter(x=>
+String(x.machineId)===String(id)
+);
+
+const fs=db.faults.filter(x=>
+String(x.machineId)===String(id)
+);
+
+const wo=db.workorders.filter(x=>
+String(x.machineId)===String(id)
+);
+
+const ins=db.inspections.filter(x=>
+String(x.machineId)===String(id)
+);
+
+const w=window.open("","_blank");
+
+if(!w){
+
+alert("Allow pop-ups to print.");
+
+return;
+
+}
+
+w.document.write(`
+
+<html>
+
+<body style="font-family:Arial;padding:25px">
+
+<h1>${esc(m.name)}</h1>
+
+<p>
+Asset ${esc(m.asset)}
+•
+S/N ${esc(m.serial)}
+•
+${esc(m.manufacturer)}
+${esc(m.model)}
+</p>
+
+<h2>Status</h2>
+
+<p>
+${esc(m.status)}
+•
+${m.hours||0} operating hours
+</p>
+
+<h2>Maintenance (${jobs.length})</h2>
+
+${jobs.map(x=>`
+
+<p>
+${esc(x.task)}
+—
+${fmt(x.due)}
+—
+${x.done?"Complete":"Open"}
+</p>
+
+`).join("")}
+
+<h2>Faults (${fs.length})</h2>
+
+${fs.map(x=>`
+
+<p>
+
+${esc(x.number)}
+—
+${esc(x.symptom)}
+—
+${esc(x.status)}
+
+<br>
+
+Root:
+${esc(x.root||"")}
+
+</p>
+
+`).join("")}
+
+<h2>Work Orders (${wo.length})</h2>
+
+${wo.map(x=>`
+
+<p>
+${esc(x.number)}
+—
+${esc(x.status)}
+—
+${x.labour||0}h
+</p>
+
+`).join("")}
+
+<h2>Inspections (${ins.length})</h2>
+
+${ins.map(x=>`
+
+<p>
+${esc(x.type)}
+—
+${esc(x.inspector)}
+</p>
+
+`).join("")}
+
+<p>
+Generated ${new Date().toLocaleString("en-AU")}
+</p>
+
+</body>
+
+</html>
+
+`);
+
+w.document.close();
+
+setTimeout(()=>w.print(),300);
+
+}
+
+
+function renderAll(){
+
+renderHome();
+
 renderMachines();
+
 renderMaintenance();
+
 renderFaults();
-renderGuides();
+
+renderWO();
+
+renderInspections();
+
+renderParts();
+
+renderShutdowns();
+
+renderAnalytics();
+
+renderKnowledge();
+
 renderHistory();
-renderChecklist();
-populateMachineSelects();
+
+if(
+document.getElementById("engineering")
+.classList.contains("active")
+)
+renderEngineering();
 
 }
 
-/* START */
 
-refresh();
+window.addEventListener("load",()=>{
 
-document.getElementById("nav-home").classList.add("active");
+renderAll();
 
+const mid=
+new URLSearchParams(location.search)
+.get("machine");
+
+if(mid&&machine(mid)){
+
+setTimeout(
+()=>machineDetail(mid),
+300
+);
+
+}
+
+if(
+"Notification"in window&&
+db.settings.notifications&&
+Notification.permission==="default"
+){
+
+Notification.requestPermission();
+
+}
+
+});
+
+</script>
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
 </script>
 
 </body>
