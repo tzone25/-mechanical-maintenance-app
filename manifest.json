@@ -1,0 +1,10 @@
+{
+  "name": "MachineMate",
+  "short_name": "MachineMate",
+  "description": "Machine maintenance, fault finding and service tracking",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "orientation": "portrait"
+}
