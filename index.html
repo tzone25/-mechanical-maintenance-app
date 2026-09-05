@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>MachineMate</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 22px 18px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+header p {
+    margin: 5px 0 0;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.container {
+    padding: 16px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 19px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.stat strong {
+    display: block;
+    font-size: 28px;
+}
+
+.stat span {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+button {
+    border: 0;
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 4px 3px;
+    background: #111827;
+    color: white;
+}
+
+button.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+button.danger {
+    background: #dc2626;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin: 6px 0 12px;
+    font-size: 16px;
+    background: white;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.machine {
+    border-left: 5px solid #111827;
+}
+
+.machine h3 {
+    margin: 0 0 5px;
+}
+
+.machine p {
+    margin: 5px 0;
+    color: #6b7280;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge.danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 4px;
+    z-index: 20;
+}
+
+nav button {
+    background: transparent;
+    color: #374151;
+    font-size: 12px;
+    padding: 8px;
+}
+
+nav button.active {
+    color: #111827;
+    font-weight: 800;
+}
+
+.page {
+    display: none;
+    padding-bottom: 90px;
+}
+
+.page.active {
+    display: block;
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.check input {
+    width: 22px;
+    height: 22px;
+    margin: 0;
+}
+
+.fault-result {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 10px;
+}
+
+.small {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px 10px;
+    color: #6b7280;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔧 MachineMate</h1>
+    <p>Maintenance & Fault Finding</p>
+</header>
+
+<!-- DASHBOARD -->
+<section id="home" class="page active">
+<div class="container">
+
+    <div class="card">
+        <h2>Good morning 👋</h2>
+        <p>Keep your machines maintained, faults recorded and maintenance history organised.</p>
+        <button onclick="showPage('machines')">View Machines</button>
+        <button class="secondary" onclick="showPage('faults')">Fault Finding</button>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <strong id="machineCount">0</strong>
+            <span>Machines</span>
+        </div>
+
+        <div class="stat">
+            <strong id="faultCount">0</strong>
+            <span>Fault Records</span>
+        </div>
+
+        <div class="stat">
+            <strong id="maintenanceCount">0</strong>
+            <span>Maintenance</span>
+        </div>
+
+        <div class="stat">
+            <strong id="checkCount">0</strong>
+            <span>Checklist Items</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Quick Actions</h2>
+        <button onclick="showPage('machines')">🏭 Machines</button>
+        <button onclick="showPage('maintenance')">🔧 Maintenance</button>
+        <button onclick="showPage('faults')">⚠️ Fault Finding</button>
+        <button onclick="showPage('hydraulic')">💧 Hydraulics</button>
+        <button onclick="showPage('checklist')">📋 Checklist</button>
+        <button onclick="showPage('history')">🕐 History</button>
+    </div>
+
+</div>
+</section>
+
+<!-- MACHINES -->
+<section id="machines" class="page">
+<div class="container">
+
+    <div class="card">
+        <h2>🏭 Machines</h2>
+
+        <label>Machine name</label>
+        <input id="machineName" placeholder="e.g. Hydraulic Press 1">
+
+        <label>Machine number</label>
+        <input id="machineNumber" placeholder="e.g. HP-001">
+
+        <label>Location</label>
+        <input id="machineLocation" placeholder="e.g. Workshop">
+
+        <button onclick="addMachine()">Add Machine</button>
+    </div>
+
+    <div id="machineList"></div>
+
+</div>
+</section>
+
+<!-- MAINTENANCE -->
+<section id="maintenance" class="page">
+<div class="container">
+
+    <div class="card">
+        <h2>🔧 Maintenance Record</h2>
+
+        <label>Machine</label>
+        <input id="maintMachine" placeholder="Machine name">
+
+        <label>Work completed</label>
+        <textarea id="maintWork" placeholder="Describe maintenance completed..."></textarea>
+
+        <label>Parts / materials</label>
+        <textarea id="maintParts" placeholder="Bearings, seals, oil, filters, etc."></textarea>
+
+        <label>Technician</label>
+        <input id="maintTech" placeholder="Name">
+
+        <button onclick="addMaintenance()">Save Maintenance</button>
+    </div>
+
+    <div id="maintenanceList"></div>
+
+</div>
+</section>
+
+<!-- FAULT FINDING -->
+<section id="faults" class="page">
+<div class="container">
+
+    <div class="card">
+        <h2>⚠️ Fault Finding</h2>
+
+        <label>What is the problem?</label>
+        <select id="faultType">
+            <option value="">Select a fault</option>
+            <option value="no_pressure">No hydraulic pressure</option>
+            <option value="low_pressure">Low hydraulic pressure</option>
+            <option value="slow">Machine running slow</option>
+            <option value="overheat">Overheating</option>
+            <option value="noise">Abnormal noise</option>
+            <option value="leak">Hydraulic oil leak</option>
+            <option value="bearing">Bearing overheating</option>
+            <option value="vibration">Excessive vibration</option>
+        </select>
+
+        <button onclick="diagnose()">Analyse Fault</button>
+
+        <div id="faultResult"></div>
+    </div>
+
+</div>
+</section>
+
+<!-- HYDRAULICS -->
+<section id="hydraulic" class="page">
+<div class="container">
+
+    <div class="card">
+        <h2>💧 Hydraulic Troubleshooting</h2>
+
+        <p class="small">
+            Use this as a troubleshooting guide. Always follow site isolation,
+            pressure-release and WHS procedures.
+        </p>
+
+        <h3>No Hydraulic Pressure</h3>
+
+        <div class="fault-result">
+            <strong>Check:</strong>
+            <ol>
+                <li>Oil level and condition</li>
+                <li>Pump drive / coupling</li>
+                <li>Pump rotation</li>
+                <li>Inlet restriction</li>
+                <li>Relief valve setting</li>
+                <li>Open-centre / closed-centre configuration</li>
+                <li>Valve position</li>
+                <li>Major internal leakage</li>
+            </ol>
+        </div>
+
+        <h3>Low Pressure</h3>
+
+        <div class="fault-result">
+            <strong>Possible causes:</strong>
+            <ul>
+                <li>Relief valve incorrectly adjusted</li>
+                <li>Worn pump</li>
+                <li>Excessive internal leakage</li>
+                <li>Faulty pressure-control valve</li>
+                <li>Incorrect pump control setting</li>
+                <li>Restricted or damaged components</li>
+            </ul>
+        </div>
+
+        <h3>Hydraulic Overheating</h3>
+
+        <div class="fault-result">
+            <strong>Possible causes:</strong>
+            <ul>
+                <li>Relief valve bypassing continuously</li>
+                <li>Incorrect pressure setting</li>
+                <li>Restricted cooler</li>
+                <li>Low oil level</li>
+                <li>Incorrect oil viscosity</li>
+                <li>Excessive internal leakage</li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist" class="page">
+<div class="container">
+
+    <div class="card">
+        <h2>📋 Mechanical Inspection</h2>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check for abnormal noise</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check for excessive vibration</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Inspect bearings</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Inspect couplings</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check guards</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check fasteners</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check lubrication</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Inspect for leaks</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>💧 Hydraulic Inspection</h2>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check hydraulic oil level</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Inspect hoses</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Inspect fittings</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check filters</span>
+        </div>
+
+        <div class="check">
+            <input type="checkbox" onchange="updateChecks()">
+            <span>Check for leaks</span>
+        </div>
+    </div>
+
+</div>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="page">
+<div class="container">
+
+    <div class="card">
+        <h2>🕐 Machine History</h2>
+        <p class="small">Your maintenance and fault records are stored on this device.</p>
+    </div>
+
+    <div id="historyList"></div>
+
+    <div class="card">
+        <button class="danger" onclick="clearAllData()">Clear All App Data</button>
+    </div>
+
+</div>
+</section>
+
+<!-- NAVIGATION -->
+<nav>
+    <button onclick="showPage('home')" id="nav-home">🏠<br>Home</button>
+    <button onclick="showPage('machines')" id="nav-machines">🏭<br>Machines</button>
+    <button onclick="showPage('maintenance')" id="nav-maintenance">🔧<br>Maintenance</button>
+    <button onclick="showPage('faults')" id="nav-faults">⚠️<br>Faults</button>
+    <button onclick="showPage('checklist')" id="nav-checklist">📋<br>Checklist</button>
+</nav>
+
+<script>
+
+let machines = JSON.parse(localStorage.getItem("machines") || "[]");
+let maintenance = JSON.parse(localStorage.getItem("maintenance") || "[]");
+let faults = JSON.parse(localStorage.getItem("faults") || "[]");
+
+function saveData() {
+    localStorage.setItem("machines", JSON.stringify(machines));
+    localStorage.setItem("maintenance", JSON.stringify(maintenance));
+    localStorage.setItem("faults", JSON.stringify(faults));
+    updateDashboard();
+    renderMachines();
+    renderMaintenance();
+    renderHistory();
+}
+
+function showPage(page) {
+
+    document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll("nav button").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    const nav = document.getElementById("nav-" + page);
+
+    if (nav) {
+        nav.classList.add("active");
+    }
+
+    window.scrollTo(0,0);
+}
+
+function addMachine() {
+
+    const name = document.getElementById("machineName").value.trim();
+    const number = document.getElementById("machineNumber").value.trim();
+    const location = document.getElementById("machineLocation").value.trim();
+
+    if (!name) {
+        alert("Please enter a machine name.");
+        return;
+    }
+
+    machines.push({
+        id: Date.now(),
+        name,
+        number,
+        location,
+        date: new Date().toLocaleString()
+    });
+
+    document.getElementById("machineName").value = "";
+    document.getElementById("machineNumber").value = "";
+    document.getElementById("machineLocation").value = "";
+
+    saveData();
+}
+
+function renderMachines() {
+
+    const list = document.getElementById("machineList");
+
+    if (!machines.length) {
+        list.innerHTML = `
+            <div class="card empty">
+                No machines added yet.
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = machines.map(m => `
+        <div class="card machine">
+            <h3>${escapeHTML(m.name)}</h3>
+            <p>Machine: ${escapeHTML(m.number || "Not specified")}</p>
+            <p>Location: ${escapeHTML(m.location || "Not specified")}</p>
+            <span class="badge">ACTIVE</span>
+            <br>
+            <button class="danger" onclick="deleteMachine(${m.id})">Delete</button>
+        </div>
+    `).join("");
+}
+
+function deleteMachine(id) {
+
+    if (!confirm("Delete this machine?")) return;
+
+    machines = machines.filter(m => m.id !== id);
+    saveData();
+}
+
+function addMaintenance() {
+
+    const machine = document.getElementById("maintMachine").value.trim();
+    const work = document.getElementById("maintWork").value.trim();
+    const parts = document.getElementById("maintParts").value.trim();
+    const tech = document.getElementById("maintTech").value.trim();
+
+    if (!machine || !work) {
+        alert("Enter the machine and work completed.");
+        return;
+    }
+
+    maintenance.push({
+        id: Date.now(),
+        machine,
+        work,
+        parts,
+        tech,
+        date: new Date().toLocaleString()
+    });
+
+    document.getElementById("maintMachine").value = "";
+    document.getElementById("maintWork").value = "";
+    document.getElementById("maintParts").value = "";
+    document.getElementById("maintTech").value = "";
+
+    saveData();
+}
+
+function renderMaintenance() {
+
+    const list = document.getElementById("maintenanceList");
+
+    if (!maintenance.length) {
+        list.innerHTML = `
+            <div class="card empty">
+                No maintenance records yet.
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = maintenance.slice().reverse().map(m => `
+        <div class="card">
+            <h3>🔧 ${escapeHTML(m.machine)}</h3>
+            <p>${escapeHTML(m.work)}</p>
+            ${m.parts ? `<p><strong>Parts:</strong> ${escapeHTML(m.parts)}</p>` : ""}
+            ${m.tech ? `<p><strong>Technician:</strong> ${escapeHTML(m.tech)}</p>` : ""}
+            <p class="small">${escapeHTML(m.date)}</p>
+        </div>
+    `).join("");
+}
+
+function diagnose() {
+
+    const type = document.getElementById("faultType").value;
+    const result = document.getElementById("faultResult");
+
+    const faultsData = {
+
+        no_pressure: {
+            title: "No Hydraulic Pressure",
+            causes: [
+                "Check oil level",
+                "Check pump drive and coupling",
+                "Verify pump rotation",
+                "Check suction restriction",
+                "Check relief valve",
+                "Check directional/control valve configuration",
+                "Check for major internal leakage"
+            ]
+        },
+
+        low_pressure: {
+            title: "Low Hydraulic Pressure",
+            causes: [
+                "Check pressure setting",
+                "Inspect relief valve",
+                "Check pump condition",
+                "Check for internal leakage",
+                "Inspect pressure-control components"
+            ]
+        },
+
+        slow: {
+            title: "Machine Running Slow",
+            causes: [
+                "Low flow",
+                "Pump wear",
+                "Restricted filter",
+                "Incorrect valve setting",
+                "Internal leakage",
+                "Low engine/motor speed"
+            ]
+        },
+
+        overheat: {
+            title: "Overheating",
+            causes: [
+                "Relief valve bypassing",
+                "Restricted cooler",
+                "Low oil level",
+                "Incorrect oil viscosity",
+                "Excessive internal leakage",
+                "Excessive pressure drop"
+            ]
+        },
+
+        noise: {
+            title: "Abnormal Noise",
+            causes: [
+                "Loose components",
+                "Bearing damage",
+                "Cavitation",
+                "Aeration",
+                "Misalignment",
+                "Damaged coupling"
+            ]
+        },
+
+        leak: {
+            title: "Hydraulic Oil Leak",
+            causes: [
+                "Loose fitting",
+                "Damaged hose",
+                "Failed seal",
+                "Damaged tube",
+                "Cracked component",
+                "Excessive system pressure"
+            ]
+        },
+
+        bearing: {
+            title: "Bearing Overheating",
+            causes: [
+                "Incorrect lubrication",
+                "Over-greasing",
+                "Under-greasing",
+                "Misalignment",
+                "Excessive preload",
+                "Bearing damage",
+                "Excessive load"
+            ]
+        },
+
+        vibration: {
+            title: "Excessive Vibration",
+            causes: [
+                "Misalignment",
+                "Imbalance",
+                "Loose mounting",
+                "Bearing damage",
+                "Coupling problem",
+                "Structural resonance"
+            ]
+        }
+    };
+
+    if (!type) {
+        result.innerHTML = "";
+        return;
+    }
+
+    const data = faultsData[type];
+
+    result.innerHTML = `
+        <div class="fault-result">
+            <h3>${data.title}</h3>
+            <strong>Possible causes / checks:</strong>
+            <ol>
+                ${data.causes.map(c => `<li>${c}</li>`).join("")}
+            </ol>
+            <p class="small">
+                Follow your site's isolation, pressure-release and WHS procedures
+                before inspection or repair.
+            </p>
+            <button onclick="recordFault('${type}')">Record Fault</button>
+        </div>
+    `;
+}
+
+function recordFault(type) {
+
+    const select = document.getElementById("faultType");
+    const description = select.options[select.selectedIndex].text;
+
+    faults.push({
+        id: Date.now(),
+        fault: description,
+        date: new Date().toLocaleString()
+    });
+
+    saveData();
+
+    alert("Fault recorded.");
+}
+
+function updateChecks() {
+
+    const checks = document.querySelectorAll(".check input");
+    let completed = 0;
+
+    checks.forEach(c => {
+        if (c.checked) completed++;
+    });
+
+    document.getElementById("checkCount").textContent = completed;
+}
+
+function updateDashboard() {
+
+    document.getElementById("machineCount").textContent = machines.length;
+    document.getElementById("faultCount").textContent = faults.length;
+    document.getElementById("maintenanceCount").textContent = maintenance.length;
+
+    updateChecks();
+}
+
+function renderHistory() {
+
+    const list = document.getElementById("historyList");
+
+    let html = "";
+
+    maintenance.slice().reverse().forEach(m => {
+
+        html += `
+            <div class="card">
+                <h3>🔧 Maintenance</h3>
+                <strong>${escapeHTML(m.machine)}</strong>
+                <p>${escapeHTML(m.work)}</p>
+                <p class="small">${escapeHTML(m.date)}</p>
+            </div>
+        `;
+    });
+
+    faults.slice().reverse().forEach(f => {
+
+        html += `
+            <div class="card">
+                <h3>⚠️ Fault</h3>
+                <strong>${escapeHTML(f.fault)}</strong>
+                <p class="small">${escapeHTML(f.date)}</p>
+            </div>
+        `;
+    });
+
+    if (!html) {
+        html = `
+            <div class="card empty">
+                No history recorded yet.
+            </div>
+        `;
+    }
+
+    list.innerHTML = html;
+}
+
+function clearAllData() {
+
+    if (!confirm("This will permanently delete your machines and records. Continue?")) {
+        return;
+    }
+
+    machines = [];
+    maintenance = [];
+    faults = [];
+
+    localStorage.clear();
+
+    saveData();
+}
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+renderMachines();
+renderMaintenance();
+renderHistory();
+updateDashboard();
+
+</script>
+
+</body>
+</html>
